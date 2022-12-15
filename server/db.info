@@ -1,0 +1,21 @@
+
+```shell
+podman run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 54321:5432 docker.io/library/postgres:12
+#enter psql
+podman exec -it postgres /bin/bash
+su - postgres
+psql
+```
+
+
+```sql
+create database tods;
+\c tods
+```
+
+//care key
+```sql
+insert into userinfo (account, key, isadmin) values ('admin', '123', true);
+```
+
+

@@ -1,10 +1,27 @@
 <template>
-<div>
-    用户<input type="text" v-model="data.userInfo.Account" />
-    密码<input type="password" v-model="data.userInfo.Key" />
-    <button @click="signin">登录</button>
-    <p v-if="signinResult != ''">{{signinResult}}</p>
-</div>
+<el-row justify="center" align="middle">
+    <el-col :span="3" style="min-height: 800px"></el-col>
+    <el-col :span="6" class="logo"><span>TODS</span></el-col>
+    <el-col :span="3"></el-col>
+    <el-col :span="3"></el-col>
+    <el-col :span="6">
+        <el-card class="logincard" shadow="always">
+            <template #header>
+                <span>请登录</span>
+            </template>
+            <el-input class="inputbox" type="text" v-model="data.userInfo.Account" placeholder="请输入账号" clearable>
+                <template #prepend>账号：</template>
+            </el-input>
+
+            <el-input class="inputbox" type="password" v-model="data.userInfo.Key" clearable show-password>
+                <template #prepend>密码：</template>
+            </el-input>
+            <el-button type="primary" @click="signin">登录</el-button>
+            <p v-if="signinResult != ''">{{signinResult}}</p>
+        </el-card>
+    </el-col>
+    <el-col :span="3"></el-col>
+</el-row>
 </template>
 
 <script setup>
@@ -38,20 +55,23 @@ function signin() {
         setTimeout(() => {router.push('/')}, 500)
     }).catch((err) => {
         // console.log("signin failed")
-        // console.log(err)
+        console.log(err)
         signinResult.value = "登录失败：" + err.data.msg
+        data.userInfo.Key = ""
     });
 };
 
-// return {
-//     data,
-//     signinResult,
-//     signin
-// }
 </script>
 
 <style scoped>
-div {
-    margin: auto;
+
+.logo {
+    font-size:200px;
+    color: aqua;
 }
+
+.inputbox {
+    margin-bottom: 8px;
+}
+
 </style>

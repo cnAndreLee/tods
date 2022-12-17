@@ -2,7 +2,7 @@
 <el-row>
   <el-col :span="24"><Header></Header></el-col>
 </el-row>
-<el-row>
+<el-row justify="center">
   <el-col :span="4" >
     <el-tree 
       :data="treedata" 
@@ -13,33 +13,11 @@
       class="aside-tree" 
       />
   </el-col>
-  
-  <el-col :span="16"><Player /></el-col>
+  <el-col :span="1"></el-col>
+  <el-col :span="14"><Player /></el-col>
+  <el-col :span="1"></el-col>
   <el-col :span="4"><FileList /></el-col>
 </el-row>
-
-<!-- <div>
-  <el-container>
-    <el-header><Header></Header></el-header>
-    <el-container>
-      <el-aside width="200px">
-        <el-tree 
-          :data="treedata" 
-          :props="defaultProps" 
-          @node-click="handleNodeClick" 
-          :highlight-current="true" 
-          icon="null" 
-        />
-      </el-aside>
-      <el-container>
-        <el-aside><Player /></el-aside>
-        <el-main><FileList /></el-main>
-      </el-container>
-    </el-container>
-  </el-container>
-</div> -->
-
-
 </template>
 
 <script lang="ts" setup>

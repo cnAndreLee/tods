@@ -1,35 +1,29 @@
 <template>
-  <el-dropdown role="navigation">
-    <span class="el-dropdown-link">
-      {{userInfo}}
-      <el-icon class="el-icon--right">
-        <arrow-down />
-      </el-icon>
-    </span>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item>学校：xx</el-dropdown-item>
-        <el-dropdown-item>到期日期：</el-dropdown-item>
-        <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
-        <el-dropdown-item disabled>Action 4</el-dropdown-item>
-        <el-dropdown-item divided>Action 5</el-dropdown-item>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
-  <router-link v-if="userInfo === 'mxdgg'" id="registerbtn" to="/register">用户管理</router-link>
+  <el-row align="middle">
+    <el-col :span="3"><span>TODS</span></el-col>
+    <el-col :span="18" style="height: 60px"></el-col>
+    <el-col :span="3">
+      <el-dropdown size="large" role="menu" >
+        <el-button type="primary">
+          <el-icon style="margin-right:5px"><User /></el-icon> {{userInfo==null? "":userInfo.account}}  <el-icon style="margin-left:5px"><arrow-down /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item><el-icon><House /></el-icon>学校：{{userInfo==null? "":userInfo.schoolname}}</el-dropdown-item>
+            <el-dropdown-item ><el-icon><Calendar /></el-icon>到期日期：{{userInfo==null? "":userInfo.outtime}}</el-dropdown-item>
+            <el-dropdown-item  @click="logout"><el-icon><SwitchButton /></el-icon>退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <router-link v-if="userInfo==null? false:userInfo.account === 'admin'" id="registerbtn" to="/register">管理</router-link>
+    </el-col>
+  </el-row>
 
-<!-- <div class="headerdiv">
-    <span>{{userInfo}}</span>
-    
-    <router-link v-if="!userInfo" id="loginbtn" to="/login">登录</router-link>
-    
-    <button @click="logout" v-if="userInfo" >退出登录</button>
-</div> -->
 </template>
 
 <script setup>
 import { ElNotification as notify } from 'element-plus'
-import { ArrowDown } from '@element-plus/icons-vue'
+import { ArrowDown,Calendar,User,House,SwitchButton } from '@element-plus/icons-vue'
 import { computed,onMounted } from 'vue'
 // import storageService from '../../service/storagService'
 import { useStore } from 'vuex'
@@ -41,13 +35,14 @@ const router = useRouter()
 const store = useStore()
 
 // 生命周期钩子：组件挂载后执行
-onMounted(() => {
-    if (storageService.get(storageService.USER_TOKEN) != null) {
-        store.dispatch('userModule/info')
-    } else {
-        router.push('/login')
-    }
-});
+const init = () => {
+  if (storageService.get(storageService.USER_TOKEN) != null) {
+      store.dispatch('userModule/info')
+  } else {
+      router.push('/login')
+  }
+};
+init();
 
 const userInfo = computed( ()  => {
     // return JSON.parse(storageService.get(storageService.USER_INFO))

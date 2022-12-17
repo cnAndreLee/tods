@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/cnAndreLee/tods_server/common"
 	"github.com/cnAndreLee/tods_server/config"
 	"github.com/cnAndreLee/tods_server/dto"
+	"github.com/cnAndreLee/tods_server/model"
 	"github.com/cnAndreLee/tods_server/response"
 	"github.com/cnAndreLee/tods_server/service"
 	"github.com/cnAndreLee/tods_server/utils"
@@ -46,18 +48,6 @@ func JWTLogin(c *gin.Context) {
 
 	utils.LogINFO(fmt.Sprintf("收到用户登录请求，accout:%v   key:%v", RequestUser.Account, RequestUser.Key))
 
-	// 校验用户名
-	if !IsAccountLegal(RequestUser.Account) {
-		res := response.ResponseStruct{
-			HttpStatus: http.StatusBadRequest,
-			Code:       1,
-			Msg:        "用户名不合法",
-			Data:       nil,
-		}
-		response.Response(c, res)
-		return
-	}
-
 	// 交给service验证用户
 	res := service.UserLoginService(RequestUser)
 	response.Response(c, res)
@@ -65,12 +55,28 @@ func JWTLogin(c *gin.Context) {
 
 func Info(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
+	var muser model.User
+	result := common.DB.Where("account = ?", user).First(&muser)
 
+	// 如果数据库中未查询到该用户，则返回未认证
+	if result.Error != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusUnauthorized,
+			Code:       1,
+			Msg:        "用户不存在",
+			Data:       gin.H{"user": user},
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	// 返回前将密码置为空
+	muser.Key = ""
 	res := response.ResponseStruct{
 		HttpStatus: http.StatusOK,
 		Code:       0,
 		Msg:        "ok",
-		Data:       gin.H{"user": user},
+		Data:       gin.H{"user": muser},
 	}
 
 	response.Response(ctx, res)
@@ -95,16 +101,6 @@ func IsAccountLegal(account string) bool {
 			return false
 		}
 	}
-
-	// 非法用户名数组
-	// illegalAccounts := []string{"root", "admin", "administrator", "account"}
-
-	// var illegalAccountsMap map[string]string
-	// illegalAccountsMap = make(map[string]string)
-
-	// for _, v := range illegalAccounts {
-	//     illegalAccountsMap[v] = ""
-	// }
 
 	if _, ok := config.BannedAccountsMap[account]; ok {
 		utils.LogINFO("用户名被禁止")

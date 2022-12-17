@@ -38,16 +38,7 @@ const userModule = {
                     } else {
                         reject(res)
                     }
-                    
-                    // return userService.info() 
                 })
-                // .then( response => {
-                //     console.log("second then")
-                //     // save userifo
-                //     // context.commit('SET_USERINFO', response.data.data.user)
-                    
-                //     // resolve(response)
-                // })
                 .catch((err) => {
                     console.log("catch err")
                     reject(err)

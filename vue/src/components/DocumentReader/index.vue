@@ -1,7 +1,7 @@
 <template>
 <div class="container">
 
-  <iframe class="iframe" :src="fileurl" scrolling="auto"></iframe>
+  <iframe class="iframe" :src="fileurl" scrolling="auto" allowfullscreen="true" ></iframe>
   <el-button @click="openNew">new</el-button>
 
 </div>

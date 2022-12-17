@@ -7,14 +7,13 @@
 </template>
 
 <style>
-body {
-  /*background: rgb(185, 246, 246);*//*设置颜色背景*/
+/* body {
   
-  background-image: url("./assets/bg.jpg");/*设置背景图片*/
-  background-repeat:no-repeat;/*图片适应窗口大小，这里设置的是不进行平铺*/
-  background-attachment: fixed;/*图片相对于浏览器固定,这里设置背景图片固定，不随内容滚动*/
-  background-origin: border-box;/*从边框区域显示*/
-  background-size:cover;/*指定图片大小，此时会保持图像的纵横比并将图像缩放成将完全覆盖背景定位区域的最小大小*/
+  background-image: url("./assets/bg.jpg");
+  background-repeat:no-repeat;
+  background-attachment: fixed;
+  background-origin: border-box;
+  background-size:cover;
 
-}
+} */
 </style>

@@ -66,7 +66,7 @@ func UpdaloadFile(ctx *gin.Context) {
 func GetFile(ctx *gin.Context) {
 	var modelFiles []model.File
 
-	common.DB.Debug().Find(&modelFiles)
+	common.DB.Find(&modelFiles)
 
 	var modelResFiles []model.ResFile
 	for _, v := range modelFiles {

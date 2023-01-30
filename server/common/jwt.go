@@ -6,7 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-var secret string = "tttttt"
+var secret string = "AqFkKMXeQpi1A6L28TNK"
 
 // func ParseToken(token string) (string, error) {
 //     claim, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {

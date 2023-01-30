@@ -2,16 +2,24 @@
 <el-row>
   <el-col :span="24"><Header></Header></el-col>
 </el-row>
+<el-row>
+  <el-col style="height:30px"></el-col>
+</el-row>
 <el-row justify="center">
   <el-col :span="4" >
-    <el-tree 
-      :data="treedata" 
-      :props="defaultProps" 
-      @node-click="handleNodeClick" 
-      highlight-current 
-      icon="null" 
-      class="aside-tree" 
-      />
+    <el-card style="min-height: 600px">
+      <template #header>
+        <span>课程分类</span>
+      </template>
+      <el-tree 
+        :data="treedata" 
+        :props="defaultProps" 
+        @node-click="handleNodeClick" 
+        highlight-current 
+        icon="null" 
+        class="aside-tree" 
+        />
+    </el-card>
   </el-col>
   <el-col :span="1"></el-col>
   <el-col :span="14"><Player /></el-col>
@@ -117,7 +125,7 @@ const defaultProps = {
 
 .el-tree-node__content {
   height: 40px;
-  border-top: 1px solid #ebebeb;
+  border-bottom: 1px solid #ebebeb;
 }
  
 

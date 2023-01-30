@@ -6,6 +6,8 @@
       </div>
     </template>
     <p v-for="file in localfiles" @click="select(file)" class="item text">
+      <el-icon v-if="file.suffix == 'mp4'"><VideoCamera /></el-icon>
+      <el-icon v-else><Document /></el-icon>
       {{file.title}}
     </p>
   </el-card>
@@ -14,7 +16,8 @@
 <script setup>
 import { useStore } from 'vuex'
 import { ref ,reactive ,computed } from 'vue';
-import { ElScrollbar, ElButton} from 'element-plus'
+import { Document,VideoCamera } from '@element-plus/icons-vue'
+
 
 
 const store = useStore()
@@ -51,6 +54,11 @@ const select = (file) => {
 
 .item {
   margin-bottom: 18px;
+  
+}
+
+.item:hover {
+  background-color: aqua;
 }
 
 .box-card {

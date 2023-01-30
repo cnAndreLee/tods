@@ -11,7 +11,7 @@
           <el-dropdown-menu>
             <el-dropdown-item><el-icon><House /></el-icon>学校：{{userInfo==null? "":userInfo.schoolname}}</el-dropdown-item>
             <el-dropdown-item ><el-icon><Calendar /></el-icon>到期日期：{{userInfo==null? "":userInfo.outtime}}</el-dropdown-item>
-            <el-dropdown-item  @click="logout"><el-icon><SwitchButton /></el-icon>退出登录</el-dropdown-item>
+            <el-dropdown-item  divided @click="logout"><el-icon><SwitchButton /></el-icon>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

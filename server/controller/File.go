@@ -70,6 +70,8 @@ func GetFile(ctx *gin.Context) {
 
 	var modelResFiles []model.ResFile
 	for _, v := range modelFiles {
+
+		// 拼接文件存储地址
 		url := config.CONFIG.SCHEME + "://" + config.CONFIG.ExportHOST + ":" + strconv.Itoa(config.CONFIG.ExportPort) + "/api/files/" + v.FileID + "." + v.Suffix
 		fmt.Println(url)
 		modelResFiles = append(modelResFiles, model.ResFile{

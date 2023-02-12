@@ -10,12 +10,13 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item><el-icon><House /></el-icon>学校：{{userInfo==null? "":userInfo.schoolname}}</el-dropdown-item>
-            <el-dropdown-item ><el-icon><Calendar /></el-icon>到期日期：{{userInfo==null? "":userInfo.outtime}}</el-dropdown-item>
+            <el-dropdown-item><el-icon><Calendar /></el-icon>到期日期：{{userInfo==null? "":userInfo.outtime}}</el-dropdown-item>
+            <el-dropdown-item @click="manage"><el-icon><Management /></el-icon>管理</el-dropdown-item>
             <el-dropdown-item  divided @click="logout"><el-icon><SwitchButton /></el-icon>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <router-link v-if="userInfo==null? false:userInfo.account === 'admin'" id="registerbtn" to="/register">管理</router-link>
+      <!-- <router-link v-if="userInfo==null? false:userInfo.class === 'admin'" id="registerbtn" to="/register">管理</router-link> -->
     </el-col>
   </el-row>
 
@@ -23,7 +24,7 @@
 
 <script setup>
 import { ElNotification as notify } from 'element-plus'
-import { ArrowDown,Calendar,User,House,SwitchButton } from '@element-plus/icons-vue'
+import { ArrowDown,Calendar,User,House,SwitchButton,Management } from '@element-plus/icons-vue'
 import { computed,onMounted } from 'vue'
 // import storageService from '../../service/storagService'
 import { useStore } from 'vuex'
@@ -51,6 +52,10 @@ const userInfo = computed( ()  => {
 function logout() {
     store.dispatch('userModule/logout')
     router.push('/login')
+}
+function manage() {
+    window.open(router.resolve({path:"/manage"}).href)
+    //router.push('/manage')
 }
 
 </script>

@@ -17,7 +17,7 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	{
 		GetUserRoutes(v1)
 		GetCategoryRoutes(v1)
-		GetSecondaryCategoryRoutes(v1)
+		// GetSecondaryCategoryRoutes(v1)
 		GetFIleRoutes(v1)
 	}
 

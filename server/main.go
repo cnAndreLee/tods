@@ -52,4 +52,13 @@ func main() {
 	port := config.CONFIG.PORT
 	panic(r.Run(":" + strconv.Itoa(port)))
 
+	// fmt.Println("66666666666666666")
+	// var test []int
+	// test = append(test, 1)
+	// test = append(test, 2)
+	// test = append(test, 3)
+	// fmt.Println(test)
+	// fmt.Println(test[len(test)-1])
+	// fmt.Println(test)
+
 }

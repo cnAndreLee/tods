@@ -7,6 +7,6 @@ import (
 
 func GetFIleRoutes(route *gin.RouterGroup) {
 
-	route.Handle("POST", "/file", controller.UpdaloadFile)
+	route.Handle("POST", "/file", controller.UploadFile)
 	route.Handle("GET", "/file", controller.GetFile)
 }

@@ -1,12 +1,9 @@
 package controller
 
 import (
-	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/cnAndreLee/tods_server/common"
-	"github.com/cnAndreLee/tods_server/config"
 	"github.com/cnAndreLee/tods_server/model"
 	"github.com/cnAndreLee/tods_server/response"
 	"github.com/cnAndreLee/tods_server/utils"
@@ -14,17 +11,38 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func UpdaloadFile(ctx *gin.Context) {
+func UploadFile(ctx *gin.Context) {
+
+	res := response.ResponseStruct{
+		HttpStatus: 200,
+		Code:       response.SuccessCode,
+		Msg:        "OK",
+		Data:       nil,
+	}
 
 	// 验证分类名
 	fileBelong := ctx.PostForm("filebelong")
 	if fileBelong == "" {
-		response.ResponseRequestError(ctx, "分类名错误")
+		res = response.ResponseStruct{
+			HttpStatus: 200,
+			Code:       response.FailCode,
+			Msg:        "分类名错误",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
 		return
 	}
-	result := common.DB.Where("id = ?", fileBelong).First(&model.SecondaryCategory{})
+
+	// 查询是否有对应的分类id
+	result := common.DB.Where("id = ?", fileBelong).First(&model.Category{})
 	if result.Error != nil {
-		response.ResponseRequestError(ctx, "分类名不存在")
+		res = response.ResponseStruct{
+			HttpStatus: 200,
+			Code:       response.FailCode,
+			Msg:        "分类不存在",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
 		return
 	}
 
@@ -53,7 +71,7 @@ func UpdaloadFile(ctx *gin.Context) {
 
 	common.DB.Debug().Create(&modelFile)
 
-	res := response.ResponseStruct{
+	res = response.ResponseStruct{
 		HttpStatus: 200,
 		Code:       response.SuccessCode,
 		Msg:        "OK",
@@ -64,30 +82,30 @@ func UpdaloadFile(ctx *gin.Context) {
 }
 
 func GetFile(ctx *gin.Context) {
-	var modelFiles []model.File
+	// var modelFiles []model.File
 
-	common.DB.Find(&modelFiles)
+	// common.DB.Find(&modelFiles)
 
-	var modelResFiles []model.ResFile
-	for _, v := range modelFiles {
+	// var modelResFiles []model.ResFile
+	// for _, v := range modelFiles {
 
-		// 拼接文件存储地址
-		url := config.CONFIG.SCHEME + "://" + config.CONFIG.ExportHOST + ":" + strconv.Itoa(config.CONFIG.ExportPort) + "/api/files/" + v.FileID + "." + v.Suffix
-		fmt.Println(url)
-		modelResFiles = append(modelResFiles, model.ResFile{
-			FileID:     v.FileID,
-			FileBelong: v.FileBelong,
-			Title:      v.Title,
-			Suffix:     v.Suffix,
-			Url:        url,
-		})
-	}
+	// 	// 拼接文件存储地址
+	// 	url := config.CONFIG.SCHEME + "://" + config.CONFIG.ExportHOST + ":" + strconv.Itoa(config.CONFIG.ExportPort) + "/api/files/" + v.FileID + "." + v.Suffix
+	// 	fmt.Println(url)
+	// 	modelResFiles = append(modelResFiles, model.ResFile{
+	// 		FileID:     v.FileID,
+	// 		FileBelong: v.FileBelong,
+	// 		Title:      v.Title,
+	// 		Suffix:     v.Suffix,
+	// 		Url:        url,
+	// 	})
+	// }
 
-	res := response.ResponseStruct{
-		HttpStatus: 200,
-		Code:       response.SuccessCode,
-		Msg:        "OK",
-		Data:       gin.H{"files": modelResFiles},
-	}
-	response.Response(ctx, res)
+	// res := response.ResponseStruct{
+	// 	HttpStatus: 200,
+	// 	Code:       response.SuccessCode,
+	// 	Msg:        "OK",
+	// 	Data:       gin.H{"files": modelResFiles},
+	// }
+	// response.Response(ctx, res)
 }

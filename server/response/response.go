@@ -13,7 +13,7 @@ func ResponseRequestError(ctx *gin.Context, str string) {
 }
 
 func ResponseServerError(ctx *gin.Context, str string) {
-	ctx.JSON(500, gin.H{"status": FailCode, "msg": str, "data": nil})
+	ctx.JSON(500, gin.H{"status": ServerErrorCode, "msg": str, "data": nil})
 
 }
 

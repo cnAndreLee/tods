@@ -13,8 +13,14 @@ const info = () =>{
     return request.get('api/v1/user/info');
 }
 
+// admin get all users
+const getAllUsers = () => {
+    return request.get('api/v1/user/users');
+}
+
 export default {
     register,
     login,
-    info
+    info,
+    getAllUsers,
 }

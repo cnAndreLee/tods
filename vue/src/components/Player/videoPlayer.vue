@@ -1,20 +1,24 @@
 <template>
     <vue3VideoPlay
+        id="player"
         v-bind="options"
         poster="https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/ironMan.jpg" >
     </vue3VideoPlay>
 </template>
 
 <script setup>
-import { ref ,reactive ,computed } from 'vue';
+import { ref ,reactive ,computed, onBeforeUpdate } from 'vue';
 import { useStore } from 'vuex'
 import "vue3-video-play/dist/style.css";
 import vue3VideoPlay from "vue3-video-play";
+import config from '../../config';
 
 const store = useStore()
 
 const selectedFileUrl = computed(() => {
-  return store.state.fileModule.selectedFile.url
+  const selectedFile = store.state.fileModule.selectedFile
+  const url = config.backend + "/api/files/" + selectedFile.id + "." + selectedFile.suffix
+  return url
 })
 
 const options = reactive({
@@ -43,5 +47,9 @@ const options = reactive({
     "fullScreen",
   ], //显示所有按钮,
 });
+
+onBeforeUpdate(()=>{
+  // 暂停视频
+})
 
 </script>

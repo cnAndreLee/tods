@@ -30,7 +30,7 @@ package controller
 
 // 	// 查询是否存在对应fatherid
 // 	modelCategory := model.Category{ID: voSecondaryCategory.FatherID}
-// 	if common.DB.Debug().First(&modelCategory).Error != nil {
+// 	if common.DB.First(&modelCategory).Error != nil {
 // 		res := response.ResponseStruct{
 // 			HttpStatus: http.StatusBadRequest,
 // 			Code:       response.FailCode,
@@ -52,7 +52,7 @@ package controller
 // 		Name:     voSecondaryCategory.Name,
 // 		FatherID: voSecondaryCategory.FatherID,
 // 	}
-// 	result := common.DB.Debug().Create(modelSecondaryCategory)
+// 	result := common.DB.Create(modelSecondaryCategory)
 // 	if err := result.Error; err != nil {
 // 		res := response.ResponseStruct{
 // 			HttpStatus: http.StatusOK,
@@ -79,7 +79,7 @@ package controller
 // 	utils.LogINFO(fmt.Sprint("收到删除二级分类请求，分类id：", id))
 
 // 	modelSecondaryCategory := model.SecondaryCategory{ID: id}
-// 	result := common.DB.Debug().Delete(&modelSecondaryCategory)
+// 	result := common.DB.Delete(&modelSecondaryCategory)
 // 	// 不会进入此逻辑，因为删除一直成功
 // 	if err := result.Error; err != nil {
 // 		res := response.ResponseStruct{
@@ -121,7 +121,7 @@ package controller
 // 		return
 // 	}
 
-// 	result := common.DB.Debug().Model(&modelSecondaryCategory).Where("id = ?", id).Update("name", modelSecondaryCategory.Name)
+// 	result := common.DB.Model(&modelSecondaryCategory).Where("id = ?", id).Update("name", modelSecondaryCategory.Name)
 // 	if err := result.Error; err != nil {
 // 		res := response.ResponseStruct{
 // 			HttpStatus: http.StatusOK,

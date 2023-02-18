@@ -5,7 +5,8 @@
         <span>课程列表</span>
       </div>
     </template>
-    <p v-for="file in localfiles" @click="select(file)" class="item text">
+    <p v-if="files.length == 0">无</p>
+    <p v-for="file in files" @click="select(file)" class="item text">
       <el-icon v-if="file.suffix == 'mp4'"><VideoCamera /></el-icon>
       <el-icon v-else><Document /></el-icon>
       {{file.title}}
@@ -23,19 +24,19 @@ import { Document,VideoCamera } from '@element-plus/icons-vue'
 const store = useStore()
 
 
-const localfiles = computed(()=>{
-    let localFiles = [];
-    for ( let v of store.state.fileModule.files ) {
-        if ( v.filebelong == store.state.fileModule.selectdSecondaryCategory) {
-            localFiles.push(v)
-        }
-    }
-    return localFiles
+const files = computed(()=>{
+    // let localFiles = [];
+    // for ( let v of store.state.fileModule.files ) {
+    //     if ( v.filebelong == store.state.fileModule.selectdSecondaryCategory) {
+    //         localFiles.push(v)
+    //     }
+    // }
+    // return localFiles
+    return store.state.fileModule.files
 })
 
 const select = (file) => {
   store.commit('fileModule/SET_SelectedFile',file)
-  console.log(store.state.fileModule.selectedFile)
 }
 
 

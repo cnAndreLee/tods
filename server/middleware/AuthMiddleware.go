@@ -26,6 +26,8 @@ func AuthMiddleware() gin.HandlerFunc {
 				Msg:        "认证失败",
 			}
 			response.Response(ctx, res)
+			ctx.Abort()
+			return
 		}
 
 		tokenString = tokenString[7:]
@@ -45,11 +47,6 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		fmt.Printf("token parse success ,user is %v", user)
-		// if !isAccountExist(user) {
-		//     response.Response(ctx, http.StatusUnauthorized, 1, "auth failed", nil)
-		//     ctx.Abort()
-		//     return
-		// }
 
 		ctx.Set("user", user)
 		ctx.Next()
@@ -62,12 +59,3 @@ func ClientIPDeal() gin.HandlerFunc {
 		ctx.Next()
 	}
 }
-
-// func isAccountExist(account string) bool {
-//     var user model.User
-//     if res := common.DB.Where("account = ?", account).First(&user); res.Error != nil {
-//         return false
-//     }
-
-//     return true
-// }

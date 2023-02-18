@@ -1,137 +1,117 @@
 <template>
-<el-row>
-  <el-col :span="24"><Header></Header></el-col>
-</el-row>
-<el-row>
-  <el-col style="height:30px"></el-col>
-</el-row>
-<el-row justify="center">
-  <el-col :span="4" >
-    <el-card style="min-height: 600px">
-      <template #header>
-        <span>课程分类</span>
-      </template>
-      <el-tree 
-        :data="treedata" 
-        :props="defaultProps" 
-        @node-click="handleNodeClick" 
-        highlight-current 
-        icon="null" 
-        class="aside-tree" 
-        />
-    </el-card>
-  </el-col>
-  <el-col :span="1"></el-col>
-  <el-col :span="14"><Player /></el-col>
-  <el-col :span="1"></el-col>
-  <el-col :span="4"><FileList /></el-col>
-</el-row>
+  <el-row>
+    <el-col :span="24"><Header></Header></el-col>
+  </el-row>
+  <el-row>
+    <el-col style="height:30px"></el-col>
+  </el-row>
+  <el-row justify="center">
+    <el-col :span="4" >
+      <el-card style="min-height: 600px">
+        <template #header>
+          <span>课程分类</span>
+        </template>
+        <el-tree 
+          :data="data" 
+          :props="defaultProps" 
+          @node-click="handleNodeClick" 
+          highlight-current 
+          icon="null" 
+          class="aside-tree" 
+          />
+      </el-card>
+    </el-col>
+    <el-col :span="1"></el-col>
+    <el-col :span="14"><Player /></el-col>
+    <el-col :span="1"></el-col>
+    <el-col :span="4"><FileList /></el-col>
+  </el-row>
 </template>
 
 <script lang="ts" setup>
-import {useStore} from 'vuex'
-import Header from "../../components/Header/index.vue"
-import Player from "../../components/Player/index.vue"
-import FileList from "../../components/FileList/index.vue"
-import { ref,computed,onMounted,onBeforeMount } from 'vue'
-import fileService from '../../service/fileService';
-import { dateEquals, ElTree } from 'element-plus'
-import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting,
-} from '@element-plus/icons-vue'
+  import {useStore} from 'vuex'
+  import Header from "../../components/Header/index.vue"
+  import Player from "../../components/Player/index.vue"
+  import FileList from "../../components/FileList/index.vue"
+  import { ref,computed,onMounted,onBeforeMount } from 'vue'
 
-const store = useStore()
+  const store = useStore()
 
-interface Tree {
-  label: string
-  id:string
-  level:Number
-  children?: Tree[]
-}
-const treedata: Tree[] = ref([])
+  interface Tree {
+    label: string
+    id:string
+    level:Number
+    children?: Tree[]
+  }
+
+  const defaultProps = {
+    children: 'children',
+    label: 'label',
+  }
+  const data: Tree[] = ref([])
 
 
-const DataInit = async () => {
-  let res1 = await fileService.getCategory()
-  let res2 = await fileService.getSecondaryCategory()
-  store.dispatch('fileModule/getFiles')
+  const handleNodeClick = (data: Tree) => {
+    if (data.level == 2) {
+      store.dispatch('fileModule/getFiles',{"id":data.id}).then((res)=>{
+      }).catch((res)=>{
+        console.log(res.data.msg)
+      })
+    }
+  }
 
-  let res1map = new Map()
-  let res2map = new Map()
+  const DataInit = () => {
 
-  // 第一个循环，生产一级目录map，k是treedata索引值
-  for (let k in res1.data.data.Categories) {
-    treedata.value.push({
-      label:res1.data.data.Categories[k].name,
-      id:res1.data.data.Categories[k].id,
-      level:1,
-      children:[],
+    store.dispatch('fileModule/getCategories').then((res) => {
+      const categories = res.data.data.categories
+      for (let k in categories) {
+        data.value.push({
+          label:categories[k].title,
+          id:categories[k].id,
+          level:1,
+          children:[],
+        })
+        
+        // const child = categories[k].children
+        for (let j in categories[k].children) {
+          data.value[k].children.push({
+            label:categories[k].children[j].title,
+            id:categories[k].children[j].id,
+            level:2,
+            children:[],
+          })
+
+        }
+        
+      }
+    }).catch((err)=>{
+      console.log(err)
     })
 
-    res1map.set(res1.data.data.Categories[k].id,k)
-
-  }
-
-  // 遍历二级目录
-  for (let k2 in res2.data.data.SecondaryCategories) {
-    treedata.value[res1map.get(res2.data.data.SecondaryCategories[k2].fatherid)].children.push({
-      label: res2.data.data.SecondaryCategories[k2].name,
-      id:res2.data.data.SecondaryCategories[k2].id,
-      level:2,
-    })
-    // res2map.set(res2.data.data.SecondaryCategories[k2].id,k2)
-  }
-
-};
-DataInit()
-
-const handleNodeClick = (data: Tree) => {
-
-  if (data.level != 2) {
-    return
-  }
-
-  store.commit('fileModule/SET_selectdSecondaryCategory', {id: data.id})
-
-  // for ( let file of res3.data.data.files) {
-  //   if ( file.filebelong == data.id) {
-  //     console.log(file)
-  //   }
-  // }
-}
-
-
-
-const defaultProps = {
-  children: 'children',
-  label: 'label',
-}
-
+  };
+  DataInit()
 </script>
 
 <style>
 
-.aside-tree {
-  margin-right: 6px;
-}
+  .aside-tree {
+    margin-right: 6px;
+  }
 
 
-.el-tree {
-  background-color: #fff;
-}
+  .el-tree {
+    background-color: #fff;
+  }
 
-.el-tree-node__content {
-  height: 40px;
-  border-bottom: 1px solid #ebebeb;
-}
- 
+  .el-tree-node__content {
+    height: 40px;
+    border-bottom: 1px solid #ebebeb;
+  }
+  
 
-.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
-  background-color: #b3cae4;
-  color: #fff;
-}
+  .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+    background-color: #b3cae4;
+    color: #fff;
+  }
 
 </style>

@@ -10,8 +10,8 @@ type UserRegistry struct {
 }
 
 type UserLogin struct {
-	Account string `json:"account"`
-	Key     string `json:"key"`
+	Account string `json:"account" binding:"required"`
+	Key     string `json:"key" binding:"required"`
 }
 
 // type UserDto struct {

@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
-	// "github.com/gin-contrib/cors"
 	"github.com/cnAndreLee/tods_server/common"
 	"github.com/cnAndreLee/tods_server/config"
 	"github.com/cnAndreLee/tods_server/routes"
-	"github.com/cnAndreLee/tods_server/utils"
 	"github.com/gin-gonic/gin"
 	_ "gorm.io/driver/postgres"
 )
@@ -24,41 +21,21 @@ type AuthResult struct {
 }
 
 func main() {
-	fmt.Println("main start")
-	utils.LogINFO("main start")
+
 	config.InitConfig()
 
 	db := common.InitDB()
 	sqlDB, _ := db.DB()
 	defer sqlDB.Close()
 
+	if !config.CONFIG.IsDebug {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.Default()
-
-	//解决跨域问题
-	// router.Use(cors.New(cors.Config{
-	//     AllowOrigins:     []string{"http://10.0.0.137:8080"},
-	//     AllowMethods:     []string{"GET", "POST"},
-	//     AllowHeaders:     []string{"Origin"},
-	//     ExposeHeaders:    []string{"Content-Length"},
-	//     AllowCredentials: true,
-	//     AllowOriginFunc: func(origin string) bool {
-	//         return origin == "https://github.com"
-	//     },
-	//     MaxAge: 12 * time.Hour,
-	// }))
-
 	r = routes.CollectRoute(r)
 
 	port := config.CONFIG.PORT
 	panic(r.Run(":" + strconv.Itoa(port)))
-
-	// fmt.Println("66666666666666666")
-	// var test []int
-	// test = append(test, 1)
-	// test = append(test, 2)
-	// test = append(test, 3)
-	// fmt.Println(test)
-	// fmt.Println(test[len(test)-1])
-	// fmt.Println(test)
 
 }

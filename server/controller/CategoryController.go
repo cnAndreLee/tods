@@ -25,16 +25,16 @@ func CreateCategory(c *gin.Context) {
 		Data:       nil,
 	}
 
-	// 接收客户端VO
-	var voCreateCategory model.CreateCategoryVO
-	if err := c.ShouldBind(&voCreateCategory); err != nil {
+	// 接收客户端DTO
+	var dtoCreateCategory model.CreateCategoryDTO
+	if err := c.ShouldBind(&dtoCreateCategory); err != nil {
 		res = response.ResponseStruct{
 			HttpStatus: http.StatusOK,
 			Code:       response.FailCode,
 			Msg:        "数据无效",
 			Data:       nil,
 		}
-		utils.LogINFO(fmt.Sprintf("创建分类失败, 数据无效, voCreateCategory: ", voCreateCategory))
+		utils.LogINFO(fmt.Sprintf("创建分类失败, 数据无效, voCreateCategory: ", dtoCreateCategory))
 		response.Response(c, res)
 		return
 	}
@@ -42,17 +42,17 @@ func CreateCategory(c *gin.Context) {
 	// 转换为DO
 	var doCategory model.Category
 	doCategory.ID = uuid.NewV4().String() // 生成UUID
-	doCategory.ParentID = voCreateCategory.ParentID
-	if voCreateCategory.Level == 1 {
+	doCategory.ParentID = dtoCreateCategory.ParentID
+	if dtoCreateCategory.Level == 1 {
 		doCategory.ParentID = "0"
 	}
-	doCategory.Level = voCreateCategory.Level
-	doCategory.Title = voCreateCategory.Title
+	doCategory.Level = dtoCreateCategory.Level
+	doCategory.Title = dtoCreateCategory.Title
 
 	// 写入数据库之前判断parentid是否存在
 	if doCategory.Level > 1 {
 		// 如果查找错误，证明找不到对应parentid
-		if common.DB.Debug().Where("id = ?", doCategory.ParentID).First(&model.Category{}).Error != nil {
+		if common.DB.Where("id = ?", doCategory.ParentID).First(&model.Category{}).Error != nil {
 			res = response.ResponseStruct{
 				HttpStatus: http.StatusBadRequest,
 				Code:       response.FailCode,
@@ -66,7 +66,7 @@ func CreateCategory(c *gin.Context) {
 	}
 
 	// 写入数据库
-	result := common.DB.Debug().Create(doCategory)
+	result := common.DB.Create(doCategory)
 	if err := result.Error; err != nil {
 
 		res = response.ResponseStruct{
@@ -114,7 +114,7 @@ func DeleteCategory(c *gin.Context) {
 	doCategory.ID = dtoDeleteCategory.ID
 
 	// 判断是否存在id，不存在则返回错误
-	if common.DB.Debug().First(&doCategory).Error != nil {
+	if common.DB.First(&doCategory).Error != nil {
 		res = response.ResponseStruct{
 			HttpStatus: http.StatusOK,
 			Code:       response.FailCode,
@@ -139,7 +139,7 @@ func DeleteCategory(c *gin.Context) {
 		return
 	}
 
-	result := common.DB.Debug().Delete(&doCategory)
+	result := common.DB.Delete(&doCategory)
 	// 不会进入此逻辑，因为删除一直成功
 	if result.Error != nil {
 		res = response.ResponseStruct{
@@ -183,7 +183,7 @@ func ModifyCategory(c *gin.Context) {
 	}
 
 	// 检查分类id是否存在
-	if common.DB.Debug().Where("id = ?", dtoModifyCategory.ID).First(&model.Category{}).Error != nil {
+	if common.DB.Where("id = ?", dtoModifyCategory.ID).First(&model.Category{}).Error != nil {
 		res := response.ResponseStruct{
 			HttpStatus: http.StatusOK,
 			Code:       response.FailCode,
@@ -194,7 +194,7 @@ func ModifyCategory(c *gin.Context) {
 		return
 	}
 
-	result := common.DB.Debug().
+	result := common.DB.
 		Model(&model.Category{}).
 		Where("id = ?", dtoModifyCategory.ID).
 		Update("title", dtoModifyCategory.NewTitle)
@@ -227,12 +227,12 @@ func GetCategory(c *gin.Context) {
 		Data:       nil,
 	}
 
-	common.DB.Table("categories").
-		Select("categories.id, categories.title, categories.id,categories.title").
-		Joins("left join categories on categories.parent_id = categories.id")
+	// common.DB.Table("categories").
+	// 	Select("categories.id, categories.title, categories.id,categories.title").
+	// 	Joins("left join categories on categories.parent_id = categories.id")
 
 	var Categories []model.Category
-	common.DB.Debug().Find(&Categories)
+	common.DB.Find(&Categories)
 	utils.LogINFO(fmt.Sprint(Categories))
 
 	var voGetCategories []model.GetCategoryVO
@@ -241,7 +241,7 @@ func GetCategory(c *gin.Context) {
 			voGetCategories = append(voGetCategories, model.GetCategoryVO{
 				ID:       v.ID,
 				Title:    v.Title,
-				Children: []model.GetCategoryVO{},
+				Children: nil, //[]model.GetCategoryVO{},
 			})
 			for _, v2 := range Categories {
 				if v2.Level == 2 {
@@ -262,26 +262,12 @@ func GetCategory(c *gin.Context) {
 		Code:       response.SuccessCode,
 		Msg:        "",
 		Data: gin.H{
-			"Categories": voGetCategories,
+			"categories": voGetCategories,
 		},
 	}
 
 	utils.LogINFO(fmt.Sprint(voGetCategories))
 
 	response.Response(c, res)
-
-	// var modelCategories []model.Category
-	// common.DB.Find(&modelCategories)
-
-	// utils.LogINFO(fmt.Sprint(modelCategories))
-
-	// res = response.ResponseStruct{
-	// 	HttpStatus: http.StatusOK,
-	// 	Code:       response.SuccessCode,
-	// 	Msg:        "ok",
-	// 	Data: gin.H{
-	// 		"Categories": modelCategories,
-	// 	},
-	// }
 
 }

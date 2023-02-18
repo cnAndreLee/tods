@@ -7,6 +7,9 @@ import (
 
 func GetFIleRoutes(route *gin.RouterGroup) {
 
-	route.Handle("POST", "/file", controller.UploadFile)
-	route.Handle("GET", "/file", controller.GetFile)
+	r := route.Group("/file")
+	r.Handle("POST", "", controller.UploadFile)
+	r.Handle("DELETE", "", controller.DeleteFile)
+	// 获取分类ID为id下的文件列表
+	r.Handle("GET", "", controller.GetFile)
 }

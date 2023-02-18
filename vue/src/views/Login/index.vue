@@ -1,22 +1,23 @@
 <template>
 <el-row justify="center" align="middle">
     <el-col :span="3" style="min-height: 800px"></el-col>
-    <el-col :span="6" class="logo"><span>TODS</span></el-col>
+    <el-col :span="6" class="logo">
+        <img style="width: 100%; height: 480px" src="../../assets/login-box-bg.svg" /></el-col>
     <el-col :span="3"></el-col>
     <el-col :span="3"></el-col>
     <el-col :span="6">
-        <el-card class="logincard" shadow="always">
+        <el-card class="logincard" shadow="always" style="height:270px">
             <template #header>
-                <span>请登录</span>
+                <h2>登录</h2>
             </template>
             <el-input class="inputbox" type="text" v-model="data.userInfo.Account" placeholder="请输入账号" clearable>
                 <template #prepend>账号：</template>
             </el-input>
 
-            <el-input class="inputbox" type="password" v-model="data.userInfo.Key" clearable show-password>
+            <el-input class="inputbox" type="password" v-model="data.userInfo.Key" clearable placeholder="请输入密码" show-password>
                 <template #prepend>密码：</template>
             </el-input>
-            <el-button type="primary" @click="signin">登录</el-button>
+            <el-button style="float:right" type="primary" @click="signin">登录</el-button>
             <p v-if="signinResult != ''">{{signinResult}}</p>
         </el-card>
     </el-col>
@@ -64,6 +65,13 @@ function signin() {
 </script>
 
 <style scoped>
+
+/* html {
+    background-image: url("../../assets/login-bg.svg");
+    background-position: 100%;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+} */
 
 .logo {
     font-size:200px;

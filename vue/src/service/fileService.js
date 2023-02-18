@@ -1,19 +1,23 @@
 import request from '../api/request'
 
 const getCategory = () => {
-    return request.get('api/v1/category/')
+    return request.get('api/v1/categories/')
 }
 
-const getSecondaryCategory = () => {
-    return request.get('api/v1/secondarycategory/')
+// 根据文件id删除
+const deleteFile = (id) => {
+    return request.delete('api/v1/file' + "?id=" + id)
 }
 
-const getFile = () => {
-    return request.get('api/v1/file')
+
+// 根据分类id获取文件列表
+const getFile = (id) => {
+    return request.get('api/v1/file' + "?id=" + id)
 }
+
 
 export default {
     getCategory,
-    getSecondaryCategory,
+    deleteFile,
     getFile
 }

@@ -5,7 +5,8 @@ const userModule = {
     namespaced: true,
     state: {
         token: storageService.get(storageService.USER_TOKEN),
-        userInfo: JSON.parse(storageService.get(storageService.USER_INFO))
+        userInfo: JSON.parse(storageService.get(storageService.USER_INFO)),
+
     },
 
     mutations: {
@@ -31,7 +32,7 @@ const userModule = {
         login(context, { Account, Key }) {
             return new Promise((resolve, reject) => {
                 userService.login({ Account, Key }).then( (res)=> {
-                    if (res.data.status == 0) {
+                    if ( res.data.status == 2000 ) {
                         // save token
                         context.commit('SET_TOKEN', res.data.data.token)
                         resolve(res)
@@ -40,7 +41,6 @@ const userModule = {
                     }
                 })
                 .catch((err) => {
-                    console.log("catch err")
                     reject(err)
                 })
             })
@@ -63,7 +63,13 @@ const userModule = {
         info(context) {
             return new Promise((resolve, reject) => {
                 userService.info().then( (res) => {
-                    context.commit('SET_USERINFO', res.data.data.user)
+                    if ( res.data.status == 2000 ) {
+                        context.commit('SET_USERINFO', res.data.data.user)
+                        resolve(res)
+                    } else {
+                        localStorage.clear()
+                        reject(res)
+                    }
                 }).catch((err) => {
                     localStorage.clear()
                     reject(err)

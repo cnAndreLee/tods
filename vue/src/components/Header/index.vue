@@ -11,7 +11,7 @@
           <el-dropdown-menu>
             <el-dropdown-item><el-icon><House /></el-icon>学校：{{userInfo==null? "":userInfo.schoolname}}</el-dropdown-item>
             <el-dropdown-item><el-icon><Calendar /></el-icon>到期日期：{{userInfo==null? "":userInfo.outtime}}</el-dropdown-item>
-            <el-dropdown-item @click="manage"><el-icon><Management /></el-icon>管理</el-dropdown-item>
+            <el-dropdown-item v-if="userInfo.class == 'admin'" @click="manage"><el-icon><Management /></el-icon>管理</el-dropdown-item>
             <el-dropdown-item  divided @click="logout"><el-icon><SwitchButton /></el-icon>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -38,7 +38,12 @@ const store = useStore()
 // 生命周期钩子：组件挂载后执行
 const init = () => {
   if (storageService.get(storageService.USER_TOKEN) != null) {
-      store.dispatch('userModule/info')
+      store.dispatch('userModule/info').then(() => {
+        console.log("setUserinfo success")
+      }).catch((err)=>{
+        console.log("setUserinfo failed err : " + err)
+        router.push('/login')
+      })
   } else {
       router.push('/login')
   }

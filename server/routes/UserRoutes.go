@@ -14,4 +14,6 @@ func GetUserRoutes(route *gin.RouterGroup) {
 	user.Handle("POST", "/register", controller.Register)
 	user.Handle("GET", "/info", middleware.AuthMiddleware(), controller.Info)
 
+	user.Handle("GET", "/users", middleware.AuthMiddleware(), controller.RespUsers)
+
 }

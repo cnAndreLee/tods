@@ -4,8 +4,7 @@ const fileModule = {
     namespaced: true,
     state: {
         files:[],
-        selectdSecondaryCategory:null,
-        selectedFile:{suffix:null},
+        selectedFile:{suffix:null},          // player/index需要suffix，否则报错，待优化
     },
     getters:{
         // get2Files(state) { return state.files }
@@ -15,22 +14,52 @@ const fileModule = {
         SET_FILES(state,files) {
             state.files = files
         },
-        SET_selectdSecondaryCategory(state,pyload) {
-            state.selectdSecondaryCategory = pyload.id
-        },
         SET_SelectedFile(state, pyload) {
             state.selectedFile = pyload
         }
     },
 
     actions: {
-        getFiles(context) {
+        getCategories(context) {
             return new Promise((resolve, reject) => {
-                fileService.getFile().then((res)=>{
-                    context.commit('SET_FILES', res.data.data.files)
+                fileService.getCategory().then( (res) => {
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
                 })
             })
-        }
+        },
+        deleteFile(context, payload) {
+            return new Promise((resolve, reject) => {
+                fileService.deleteFile(payload.id).then((res)=>{
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
+        getFiles(context, payload) {
+            return new Promise((resolve, reject) => {
+                fileService.getFile(payload.id).then((res)=>{
+                    if ( res.data.status == 2000 ) {
+                        context.commit('SET_FILES', res.data.data.files)
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
     },
 }
 

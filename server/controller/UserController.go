@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/cnAndreLee/tods_server/common"
-	"github.com/cnAndreLee/tods_server/config"
 	"github.com/cnAndreLee/tods_server/dto"
 	"github.com/cnAndreLee/tods_server/model"
 	"github.com/cnAndreLee/tods_server/response"
@@ -23,10 +22,10 @@ func Register(c *gin.Context) {
 	utils.LogINFO(fmt.Sprintf("收到注册请求，user: %+v", RequestUser))
 
 	//校验用户名
-	if !IsAccountLegal(RequestUser.Account) {
+	if !service.IsAccountLegal(RequestUser.Account) {
 		res := response.ResponseStruct{
 			HttpStatus: http.StatusBadRequest,
-			Code:       1,
+			Code:       response.FailCode,
 			Msg:        "用户名不合法，请使用小写字母和数字组合，且是字母开头",
 			Data:       nil,
 		}
@@ -41,16 +40,83 @@ func Register(c *gin.Context) {
 
 }
 
-func JWTLogin(c *gin.Context) {
+func JWTLogin(ctx *gin.Context) {
 
-	var RequestUser = dto.UserLogin{}
-	c.Bind(&RequestUser)
+	// 定义响应结构体
+	res := response.ResponseStruct{
+		HttpStatus: http.StatusOK,
+		Code:       response.SuccessCode,
+		Msg:        "",
+		Data:       nil,
+	}
 
-	utils.LogINFO(fmt.Sprintf("收到用户登录请求，accout:%v   key:%v", RequestUser.Account, RequestUser.Key))
+	var dtoUserLogin dto.UserLogin
+	if err := ctx.ShouldBind(&dtoUserLogin); err != nil {
+		res = response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Msg:        "登录失败，参数错误",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
+		utils.LogINFO("登录失败，参数错误:" + err.Error())
+		return
+	}
+
+	utils.LogINFO(fmt.Sprintf("收到用户登录请求，accout:%v   key:%v", dtoUserLogin.Account, dtoUserLogin.Key))
 
 	// 交给service验证用户
-	res := service.UserLoginService(RequestUser)
-	response.Response(c, res)
+	// 验证用户是否存在，并关联do与数据库
+	var doUser model.User
+	exists := service.IsAccountExist(dtoUserLogin.Account, &doUser)
+
+	if !exists {
+		utils.LogINFO("登录失败，用户不存在")
+		res = response.ResponseStruct{
+			HttpStatus: 200,
+			Code:       response.FailCode,
+			Data:       nil,
+			Msg:        "登录失败，用户名或密码错误",
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	// 验证密码
+	if dtoUserLogin.Key != doUser.Key {
+		utils.LogINFO("登录失败，密码不匹配")
+		res = response.ResponseStruct{
+			HttpStatus: 200,
+			Code:       1,
+			Data:       nil,
+			Msg:        "登录失败，用户名或密码错误",
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	// 生成token
+	tokenString, err := common.CreateToken(doUser.Account)
+	if err != nil {
+		res = response.ResponseStruct{
+			HttpStatus: http.StatusInternalServerError,
+			Code:       response.ServerErrorCode,
+			Data:       nil,
+			Msg:        "登录失败，服务器错误",
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	//return token
+	res = response.ResponseStruct{
+		HttpStatus: http.StatusOK,
+		Code:       response.SuccessCode,
+		Data:       gin.H{"token": tokenString},
+		Msg:        "ok",
+	}
+
+	response.Response(ctx, res)
 }
 
 func Info(ctx *gin.Context) {
@@ -62,7 +128,7 @@ func Info(ctx *gin.Context) {
 	if result.Error != nil {
 		res := response.ResponseStruct{
 			HttpStatus: http.StatusUnauthorized,
-			Code:       1,
+			Code:       response.FailCode,
 			Msg:        "用户不存在",
 			Data:       gin.H{"user": user},
 		}
@@ -74,7 +140,7 @@ func Info(ctx *gin.Context) {
 	muser.Key = ""
 	res := response.ResponseStruct{
 		HttpStatus: http.StatusOK,
-		Code:       0,
+		Code:       response.SuccessCode,
 		Msg:        "ok",
 		Data:       gin.H{"user": muser},
 	}
@@ -82,31 +148,46 @@ func Info(ctx *gin.Context) {
 	response.Response(ctx, res)
 }
 
-// 判断用户名是否合法
-func IsAccountLegal(account string) bool {
-	// LigalChars := "abcdefghijkmlnopqrstuvwxyz0123456789"
+// 响应所有用户信息表
+func RespUsers(ctx *gin.Context) {
 
-	// 判断字符串是否在a-z, 0-9范围之内
-	for k, v := range account {
-
-		if k == 0 {
-			if !(v >= 97 && v <= 122) {
-				utils.LogINFO("字符串不合法: 非小写字母开头")
-				return false
-			}
+	// 获取用户名，判断是否为admin
+	user, _ := ctx.Get("user")
+	var doUser model.User
+	result := common.DB.Where("account = ?", user).First(&doUser)
+	// 如果数据库中未查询到该用户，则返回未认证
+	if result.Error != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusUnauthorized,
+			Code:       1,
+			Msg:        "用户不存在",
+			Data:       nil,
 		}
-
-		if !((v >= 48 && v <= 57) || (v >= 97 && v <= 122)) {
-			utils.LogINFO("字符串不合法")
-			return false
-		}
+		response.Response(ctx, res)
+		return
 	}
 
-	if _, ok := config.BannedAccountsMap[account]; ok {
-		utils.LogINFO("用户名被禁止")
-		return false
+	if doUser.Class != "admin" {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusForbidden,
+			Code:       1,
+			Msg:        "用户无权限",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
+		return
 	}
 
-	return true
+	var users []model.User
+	common.DB.Find(&users)
 
+	res := response.ResponseStruct{
+		HttpStatus: http.StatusOK,
+		Code:       response.SuccessCode,
+		Msg:        "",
+		Data: gin.H{
+			"users": users,
+		},
+	}
+	response.Response(ctx, res)
 }

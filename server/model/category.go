@@ -22,7 +22,7 @@ type Category struct {
 }
 
 // DTO:
-type CreateCategoryVO struct { // !!!!!!!
+type CreateCategoryDTO struct { // !!!!!!!
 	ParentID string `json:"parent_id" binding:"required"`
 	Title    string `json:"title" binding:"required"`
 	Level    uint8  `json:"level" binding:"required"`

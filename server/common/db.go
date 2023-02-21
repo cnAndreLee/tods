@@ -50,7 +50,6 @@ func InitDB() *gorm.DB {
 
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.Category{})
-	// db.AutoMigrate(&model.SecondaryCategory{})
 	db.AutoMigrate(&model.File{})
 
 	if config.CONFIG.IsDebug {

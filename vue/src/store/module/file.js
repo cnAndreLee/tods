@@ -60,6 +60,58 @@ const fileModule = {
                 })
             })
         },
+        postCategory(context, payload) {
+            return new Promise((resolve, reject) => {
+                fileService.postCategory(payload).then((res)=>{
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
+        deleteCategory(context, payload) {
+            return new Promise((resolve, reject) => {
+                fileService.deleteCategory(payload).then((res)=>{
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
+        renameCategory(context, payload) {
+            return new Promise((resolve, reject) => {
+                fileService.renameCategory(payload).then((res)=>{
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
+        changeCategoryPermissions(context, payload) {
+            return new Promise((resolve, reject) => {
+                fileService.changeCategoryPermissions(payload).then((res)=>{
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
     },
 }
 

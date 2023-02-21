@@ -5,7 +5,6 @@ import Manage from "../views/Manage/index.vue"
 import Users from "../views/Manage/users.vue"
 import Files from "../views/Manage/files.vue"
 import Categories1 from "../views/Manage/categories1.vue"
-import Categories2 from "../views/Manage/categories2.vue"
 
 const routes = [
     {
@@ -34,10 +33,6 @@ const routes = [
         {
           path: 'categories1',
           component: Categories1
-        },
-        {
-          path: 'categories2',
-          component: Categories2
         },
       ],
     },

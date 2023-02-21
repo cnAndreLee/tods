@@ -1,8 +1,8 @@
 import request from '../api/request'
 
 //user register
-const register = ({Account, Key}) => {
-    return request.post('api/v1/user/register', {Account, Key})
+const register = (payload) => {
+    return request.post('api/v1/user/register', payload)
 }
 
 const login = ({Account, Key}) => {
@@ -17,10 +17,19 @@ const info = () =>{
 const getAllUsers = () => {
     return request.get('api/v1/user/users');
 }
+const getAllSchools = () => {
+    return request.get('api/v1/user/school');
+}
+
+const deleteUser = (payload) => {
+    return request.delete('api/v1/user' + "?account=" + payload)
+}
 
 export default {
     register,
     login,
     info,
     getAllUsers,
+    deleteUser,
+    getAllSchools,
 }

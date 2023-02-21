@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/cnAndreLee/tods_server/common"
-	"github.com/cnAndreLee/tods_server/dto"
 	"github.com/cnAndreLee/tods_server/model"
 	"github.com/cnAndreLee/tods_server/response"
 	"github.com/cnAndreLee/tods_server/service"
@@ -16,13 +15,20 @@ import (
 // 用户注册
 func Register(c *gin.Context) {
 
-	var RequestUser = dto.UserRegistry{}
-	//请求结果写入
-	c.Bind(&RequestUser)
-	utils.LogINFO(fmt.Sprintf("收到注册请求，user: %+v", RequestUser))
+	var dtoUser model.DtoUserRegistry
+	if err := c.ShouldBind(&dtoUser); err != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Msg:        "注册失败，参数错误",
+			Data:       nil,
+		}
+		response.Response(c, res)
+		return
+	}
 
 	//校验用户名
-	if !service.IsAccountLegal(RequestUser.Account) {
+	if !service.IsAccountLegal(dtoUser.Account) {
 		res := response.ResponseStruct{
 			HttpStatus: http.StatusBadRequest,
 			Code:       response.FailCode,
@@ -33,11 +39,33 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// 数据交给service处理
-	res := service.UserRegistryService(RequestUser)
+	NewUser := model.User{
+		Account: dtoUser.Account,
+		Key:     dtoUser.Key,
+		IsAdmin: dtoUser.IsAdmin,
+		School:  dtoUser.School,
+		OutDate: dtoUser.OutDate,
+		Remark:  dtoUser.Remark,
+	}
+	//用户数据写入
+	if common.DB.Create(&NewUser).Error != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Data:       nil,
+			Msg:        "注册失败，用户已存在",
+		}
+		response.Response(c, res)
+		return
+	}
 
+	res := response.ResponseStruct{
+		HttpStatus: http.StatusOK,
+		Code:       response.SuccessCode,
+		Data:       nil,
+		Msg:        "注册成功",
+	}
 	response.Response(c, res)
-
 }
 
 func JWTLogin(ctx *gin.Context) {
@@ -50,7 +78,7 @@ func JWTLogin(ctx *gin.Context) {
 		Data:       nil,
 	}
 
-	var dtoUserLogin dto.UserLogin
+	var dtoUserLogin model.DtoUserLogin
 	if err := ctx.ShouldBind(&dtoUserLogin); err != nil {
 		res = response.ResponseStruct{
 			HttpStatus: http.StatusOK,
@@ -151,33 +179,6 @@ func Info(ctx *gin.Context) {
 // 响应所有用户信息表
 func RespUsers(ctx *gin.Context) {
 
-	// 获取用户名，判断是否为admin
-	user, _ := ctx.Get("user")
-	var doUser model.User
-	result := common.DB.Where("account = ?", user).First(&doUser)
-	// 如果数据库中未查询到该用户，则返回未认证
-	if result.Error != nil {
-		res := response.ResponseStruct{
-			HttpStatus: http.StatusUnauthorized,
-			Code:       1,
-			Msg:        "用户不存在",
-			Data:       nil,
-		}
-		response.Response(ctx, res)
-		return
-	}
-
-	if doUser.Class != "admin" {
-		res := response.ResponseStruct{
-			HttpStatus: http.StatusForbidden,
-			Code:       1,
-			Msg:        "用户无权限",
-			Data:       nil,
-		}
-		response.Response(ctx, res)
-		return
-	}
-
 	var users []model.User
 	common.DB.Find(&users)
 
@@ -187,6 +188,67 @@ func RespUsers(ctx *gin.Context) {
 		Msg:        "",
 		Data: gin.H{
 			"users": users,
+		},
+	}
+	response.Response(ctx, res)
+}
+
+func DeleteUser(ctx *gin.Context) {
+
+	account := ctx.Query("account")
+
+	if account == "" {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Msg:        "删除失败",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	result := common.DB.Where("account = ?", account).Delete(&model.User{})
+	if result.Error != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.ServerErrorCode,
+			Msg:        "删除失败, 服务器错误",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	res := response.ResponseStruct{
+		HttpStatus: http.StatusOK,
+		Code:       response.SuccessCode,
+		Msg:        "OK",
+		Data:       nil,
+	}
+	response.Response(ctx, res)
+
+}
+
+// 响应所有学校
+func RespUsersSchool(ctx *gin.Context) {
+
+	var schools []string
+	common.DB.Model(&model.User{}).Distinct().Pluck("school", &schools)
+
+	var filteredSchools []string
+	for _, v := range schools {
+		if v != "" {
+			filteredSchools = append(filteredSchools, v)
+		}
+	}
+
+	res := response.ResponseStruct{
+		HttpStatus: http.StatusOK,
+		Code:       response.SuccessCode,
+		Msg:        "",
+		Data: gin.H{
+			"schools": filteredSchools,
 		},
 	}
 	response.Response(ctx, res)

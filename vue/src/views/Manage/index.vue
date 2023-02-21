@@ -20,9 +20,8 @@
               <el-icon><Document /></el-icon>
               <span>资源管理</span>
           </template>
-          <el-menu-item index="2-1" @click="routeto('/manage/categories1')">一级目录管理</el-menu-item>
-          <el-menu-item index="2-2" @click="routeto('/manage/categories2')">二级目录管理</el-menu-item>
-          <el-menu-item index="2-3" @click="routeto('/manage/files')">文件管理</el-menu-item>
+          <el-menu-item index="2-1" @click="routeto('/manage/categories1')">分类管理</el-menu-item>
+          <el-menu-item index="2-2" @click="routeto('/manage/files')">合集管理</el-menu-item>
         </el-sub-menu>
       </el-menu>
     </el-col>

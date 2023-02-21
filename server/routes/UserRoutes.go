@@ -11,9 +11,12 @@ func GetUserRoutes(route *gin.RouterGroup) {
 	user := route.Group("/user")
 
 	user.Handle("POST", "/login", middleware.ClientIPDeal(), controller.JWTLogin)
-	user.Handle("POST", "/register", controller.Register)
+	user.Handle("POST", "/register", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.Register)
 	user.Handle("GET", "/info", middleware.AuthMiddleware(), controller.Info)
 
-	user.Handle("GET", "/users", middleware.AuthMiddleware(), controller.RespUsers)
+	// 返回所有用户信息列表
+	user.Handle("GET", "/users", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.RespUsers)
+	user.Handle("DELETE", "", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.DeleteUser)
+	user.Handle("GET", "/school", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.RespUsersSchool)
 
 }

@@ -16,6 +16,7 @@ const (
 	ServerErrorCode  = 5000
 	TokenExpriedCode = 4010 //token过期
 	UnauthorizedCode = 4011 //未授权
+	ForbiddenCode    = 4030 //无权限
 
 	CategoryNameExistedCode          = 4100
 	SecondaryCategoryNameExistedCode = 4100

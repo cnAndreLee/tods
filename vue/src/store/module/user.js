@@ -45,14 +45,16 @@ const userModule = {
                 })
             })
         },
-        register(context, { Account, Key }) {
+        register(context, payload) {
             return new Promise((resolve, reject ) => {
-                userService.register({ Account, Key }).then( (res) => {
-                    console.log("singup success")
-                }).then( response => {
-                    resolve(response)
-                }).catch((err) => {
-                    reject(err)
+                userService.register(payload).then( (res) => {
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
                 })
             })
         },
@@ -75,7 +77,46 @@ const userModule = {
                     reject(err)
                 })
             })
-        }
+        },
+        getAllUsers(context) {
+            return new Promise((resolve, reject) => {
+                userService.getAllUsers().then( (res) => {
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
+        getAllSchools(context) {
+            return new Promise((resolve, reject) => {
+                userService.getAllSchools().then( (res) => {
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
+        deleteUser(context, payload) {
+            return new Promise((resolve, reject ) => {
+                userService.deleteUser(payload).then( (res) => {
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
     },
 }
 

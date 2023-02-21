@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/cnAndreLee/tods_server/common"
@@ -91,14 +92,40 @@ func DeleteFile(ctx *gin.Context) {
 
 	fileID := ctx.Query("id")
 
-	result := common.DB.Where("file_id = ?", fileID).Delete(&model.File{})
-	if result.Error != nil {
+	if fileID == "" {
 		res := response.ResponseStruct{
 			HttpStatus: http.StatusOK,
 			Code:       response.FailCode,
-			Msg:        "删除失败",
+			Msg:        "删除失败, 参数错误",
 			Data:       nil,
 		}
+		response.Response(ctx, res)
+		return
+	}
+
+	var doFile = model.File{}
+	common.DB.Where("file_id = ?", fileID).First(&doFile)
+
+	if common.DB.Where("file_id = ?", fileID).Delete(&model.File{}).Error != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Msg:        "删除失败, 数据库错误",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	filePath := "./file/" + doFile.FileID + "." + doFile.Suffix
+	if err := os.Remove(filePath); err != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Msg:        "删除失败, 请向开发者报告",
+			Data:       nil,
+		}
+		common.DB.Create(&doFile)
 		response.Response(ctx, res)
 		return
 	}
@@ -110,6 +137,8 @@ func DeleteFile(ctx *gin.Context) {
 		Data:       nil,
 	}
 	response.Response(ctx, res)
+	user, _ := ctx.Get("user")
+	utils.LogINFO("Deleted File:" + doFile.Title + "  user:" + user.(string))
 }
 
 func GetFile(ctx *gin.Context) {

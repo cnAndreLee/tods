@@ -57,7 +57,7 @@ func AdminAuth() gin.HandlerFunc {
 		user, _ := ctx.Get("user")
 
 		var doUser model.User
-		common.DB.Where("account = ?", user).First(&doUser)
+		common.DB.Where("account = ?", user.(string)).First(&doUser)
 
 		if doUser.IsAdmin == false {
 			res := response.ResponseStruct{

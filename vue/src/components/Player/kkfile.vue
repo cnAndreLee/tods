@@ -12,14 +12,14 @@ import { computed } from 'vue';
 import { useStore } from 'vuex'
 const store = useStore()
 
-const kkurl = config.kkfile
-const backend = config.backend
-const suffix = store.state.fileModule.selectedFile.suffix
-const id = store.state.fileModule.selectedFile.id
-const fileSource = backend + '/api/files/' + id + '.' + suffix
 
 const filkkeurl = computed(() => {
-    return kkurl + encodeURIComponent(window.btoa(fileSource))
+  const kkurl = config.kkfile
+  const backend = config.backend
+  const suffix = store.state.fileModule.selectedFile.suffix
+  const id = store.state.fileModule.selectedFile.id
+  const fileSource = backend + '/api/files/' + id + '.' + suffix
+  return kkurl + encodeURIComponent(window.btoa(fileSource))
 })
 
 </script>

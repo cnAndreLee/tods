@@ -5,12 +5,17 @@
         <span>课程列表</span>
       </div>
     </template>
-    <p v-if="files.length == 0">无</p>
-    <p v-for="file in files" @click="select(file)" class="item text">
-      <el-icon v-if="file.suffix == 'mp4'"><VideoCamera /></el-icon>
-      <el-icon v-else><Document /></el-icon>
-      {{file.title}}
-    </p>
+    <!-- <p v-if="files.length == 0">无</p> -->
+    <div 
+      v-for="file in files" 
+      style="width: 100%;"
+      @click="select(file)" 
+      class="item"
+      >
+        <el-icon v-if="file.suffix == 'mp4'"><VideoCamera /></el-icon>
+        <el-icon v-else><Document /></el-icon>
+        {{file.title}}
+  </div>
   </el-card>
 </template>
 
@@ -49,10 +54,6 @@ const select = (file) => {
   align-items: center;
 }
 
-.text {
-  font-size: 14px;
-}
-
 .item {
   margin-bottom: 18px;
   
@@ -64,5 +65,6 @@ const select = (file) => {
 
 .box-card {
   width: 100%;
+  min-height: 100%;
 }
 </style>

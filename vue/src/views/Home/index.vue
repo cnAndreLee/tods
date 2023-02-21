@@ -57,13 +57,16 @@
   const handleNodeClick = (data: Tree) => {
 
     let userInfo = store.state.userModule.userInfo
-    if ( userInfo.is_admin == false ) {
-      if (data.level == 1) {
+    if ( data.level == 1 ) {
+      
+      if (userInfo.is_admin == false) {
         if (data.permissions.indexOf(userInfo.school) == -1) {
           ElMessage.error("无权限")
           router.go(0)
         }
       }
+
+      store.commit('fileModule/SET_FILES', [])
     }
     
     if (data.level == 2) {
@@ -79,25 +82,6 @@
     store.dispatch('fileModule/getCategories').then((res) => {
       const categories = res.data.data.categories
       TreeData.value = categories
-      // for (let k in categories) {
-      //   TreeData.value.push({
-      //     title:categories[k].title,
-      //     id:categories[k].id,
-      //     level:1,
-      //     children:[],
-      //   })
-        
-      //   for (let j in categories[k].children) {
-      //     TreeData.value[k].children.push({
-      //       title:categories[k].children[j].title,
-      //       id:categories[k].children[j].id,
-      //       level:2,
-      //       children:[],
-      //     })
-
-      //   }
-        
-      // }
     }).catch((err)=>{
       console.log(err)
     })

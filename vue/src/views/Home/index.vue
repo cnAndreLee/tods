@@ -12,7 +12,7 @@
           <span>课程分类</span>
         </template>
         <el-tree 
-          :data="data" 
+          :data="TreeData" 
           :props="defaultProps" 
           @node-click="handleNodeClick" 
           highlight-current 
@@ -34,11 +34,14 @@
   import Player from "../../components/Player/index.vue"
   import FileList from "../../components/FileList/index.vue"
   import { ref,computed,onMounted,onBeforeMount } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { ElMessage } from 'element-plus'
 
   const store = useStore()
+  const router = useRouter()
 
   interface Tree {
-    label: string
+    title: string
     id:string
     level:Number
     children?: Tree[]
@@ -46,12 +49,23 @@
 
   const defaultProps = {
     children: 'children',
-    label: 'label',
+    label: 'title',
   }
-  const data: Tree[] = ref([])
+  const TreeData: Tree[] = ref([])
 
 
   const handleNodeClick = (data: Tree) => {
+
+    let userInfo = store.state.userModule.userInfo
+    if ( userInfo.is_admin == false ) {
+      if (data.level == 1) {
+        if (data.permissions.indexOf(userInfo.school) == -1) {
+          ElMessage.error("无权限")
+          router.go(0)
+        }
+      }
+    }
+    
     if (data.level == 2) {
       store.dispatch('fileModule/getFiles',{"id":data.id}).then((res)=>{
       }).catch((res)=>{
@@ -64,26 +78,26 @@
 
     store.dispatch('fileModule/getCategories').then((res) => {
       const categories = res.data.data.categories
-      for (let k in categories) {
-        data.value.push({
-          label:categories[k].title,
-          id:categories[k].id,
-          level:1,
-          children:[],
-        })
+      TreeData.value = categories
+      // for (let k in categories) {
+      //   TreeData.value.push({
+      //     title:categories[k].title,
+      //     id:categories[k].id,
+      //     level:1,
+      //     children:[],
+      //   })
         
-        // const child = categories[k].children
-        for (let j in categories[k].children) {
-          data.value[k].children.push({
-            label:categories[k].children[j].title,
-            id:categories[k].children[j].id,
-            level:2,
-            children:[],
-          })
+      //   for (let j in categories[k].children) {
+      //     TreeData.value[k].children.push({
+      //       title:categories[k].children[j].title,
+      //       id:categories[k].children[j].id,
+      //       level:2,
+      //       children:[],
+      //     })
 
-        }
+      //   }
         
-      }
+      // }
     }).catch((err)=>{
       console.log(err)
     })

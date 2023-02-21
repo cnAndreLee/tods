@@ -16,7 +16,6 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <!-- <router-link v-if="userInfo==null? false:userInfo.class === 'admin'" id="registerbtn" to="/register">管理</router-link> -->
     </el-col>
   </el-row>
 

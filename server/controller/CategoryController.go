@@ -277,6 +277,7 @@ func GetCategory(c *gin.Context) {
 			voGetCategories = append(voGetCategories, model.GetCategoryVO{
 				ID:          v.ID,
 				Title:       v.Title,
+				Level:       v.Level,
 				Children:    nil, //[]model.GetCategoryVO{},
 				Permissions: v.Permissions,
 			})
@@ -286,6 +287,7 @@ func GetCategory(c *gin.Context) {
 						voGetCategories[len(voGetCategories)-1].Children = append(voGetCategories[len(voGetCategories)-1].Children, model.GetCategoryVO{
 							ID:       v2.ID,
 							Title:    v2.Title,
+							Level:    v2.Level,
 							Children: nil,
 						})
 					}

@@ -42,6 +42,7 @@ type ChangeCategoryPermissionDTO struct {
 type GetCategoryVO struct {
 	ID          string          `json:"id"`
 	Title       string          `json:"title"`
+	Level       uint8           `json:"level"`
 	Children    []GetCategoryVO `json:"children"`
 	Permissions pq.StringArray  `json:"permissions"`
 }

@@ -18,12 +18,12 @@ const userModule = {
         },
         SET_USERINFO(state, userInfo) {
             // 更新本地缓存
-            if (userInfo === "") {
-                storageService.set(storageService.USER_INFO, "");
-            } else {
+            // if (userInfo === "") {
+            //     storageService.set(storageService.USER_INFO, "");
+            // } else {
                 storageService.set(storageService.USER_INFO, JSON.stringify(userInfo))
-            }
-            // 更新state
+            // }
+            
             state.userInfo = userInfo
         }
     },

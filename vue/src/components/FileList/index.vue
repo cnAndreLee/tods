@@ -19,9 +19,9 @@
         </div>
       </el-col>
       <el-col :span="4" >
-        <a v-for="file in files" :href="'http://andrelee.f3322.net:28000/api/files/' + file.id + '.' + file.suffix" download><el-icon class="item" size="middle" ><Download /></el-icon></a>
+        <!-- <a v-for="file in files" :href="'http://andrelee.f3322.net:28000/api/files/' + file.id + '.' + file.suffix" download><el-icon class="item" size="middle" ><Download /></el-icon></a> -->
         
-        <!-- <el-icon v-for="file in files" class="item" size="middle" @click="downloadfile(file)"><Download /></el-icon> -->
+        <el-icon v-for="file in files" class="item" size="middle" @click="downloadfile(file)"><Download /></el-icon>
       </el-col>
   </el-row>
   </el-card>
@@ -31,6 +31,7 @@
 import { useStore } from 'vuex'
 import { ref ,reactive ,computed } from 'vue';
 import { Document,VideoCamera } from '@element-plus/icons-vue'
+import config from '../../config.js'
 
 const store = useStore()
 
@@ -44,7 +45,21 @@ const select = (file) => {
 
 
 const downloadfile = (file) => {
-  window.loaction( "http://andrelee.f3322.net:28000/api/files/" + file.id + '.' + file.suffix)
+  const url = config.backend + "/api/files/" + file.id + '.' + file.suffix
+  const filename = file.title
+
+  const x = new XMLHttpRequest()
+  x.open('GET', url, true)
+  x.responseType = 'blob'
+  x.onload = e => {
+    // 会创建一个 DOMString，其中包含一个表示参数中给出的对象的URL。这个 URL 的生命周期和创建它的窗口中的 document 绑定。这个新的URL 对象表示指定的 File 对象或 Blob 对象。
+    const url = window.URL.createObjectURL(x.response)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    a.click()
+  }
+  x.send()
 }
 
 </script>

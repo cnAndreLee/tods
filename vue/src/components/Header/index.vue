@@ -58,8 +58,8 @@ function logout() {
     router.push('/login')
 }
 function manage() {
-    window.open(router.resolve({path:"/manage"}).href)
-    //router.push('/manage')
+    //window.open(router.resolve({path:"/manage"}).href)
+    router.push('/manage')
 }
 
 </script>

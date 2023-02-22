@@ -6,16 +6,24 @@
       </div>
     </template>
     <!-- <p v-if="files.length == 0">无</p> -->
-    <div 
-      v-for="file in files" 
-      style="width: 100%;"
-      @click="select(file)" 
-      class="item"
-      >
-        <el-icon v-if="file.suffix == 'mp4'"><VideoCamera /></el-icon>
-        <el-icon v-else><Document /></el-icon>
-        {{file.title}}
-  </div>
+    <el-row>
+      <el-col :span="20">
+        <div 
+          v-for="file in files" 
+          @click="select(file)" 
+          class="item"
+          >
+            <el-icon v-if="file.suffix == 'mp4'"><VideoCamera /></el-icon>
+            <el-icon v-else><Document /></el-icon>
+            {{file.title}}
+        </div>
+      </el-col>
+      <el-col :span="4" >
+        <a v-for="file in files" :href="'http://andrelee.f3322.net:28000/api/files/' + file.id + '.' + file.suffix" download><el-icon class="item" size="middle" ><Download /></el-icon></a>
+        
+        <!-- <el-icon v-for="file in files" class="item" size="middle" @click="downloadfile(file)"><Download /></el-icon> -->
+      </el-col>
+  </el-row>
   </el-card>
 </template>
 
@@ -24,19 +32,9 @@ import { useStore } from 'vuex'
 import { ref ,reactive ,computed } from 'vue';
 import { Document,VideoCamera } from '@element-plus/icons-vue'
 
-
-
 const store = useStore()
 
-
 const files = computed(()=>{
-    // let localFiles = [];
-    // for ( let v of store.state.fileModule.files ) {
-    //     if ( v.filebelong == store.state.fileModule.selectdSecondaryCategory) {
-    //         localFiles.push(v)
-    //     }
-    // }
-    // return localFiles
     return store.state.fileModule.files
 })
 
@@ -44,6 +42,10 @@ const select = (file) => {
   store.commit('fileModule/SET_SelectedFile',file)
 }
 
+
+const downloadfile = (file) => {
+  window.loaction( "http://andrelee.f3322.net:28000/api/files/" + file.id + '.' + file.suffix)
+}
 
 </script>
 
@@ -56,7 +58,8 @@ const select = (file) => {
 
 .item {
   margin-bottom: 18px;
-  
+  width: 100%;
+  height: 25px;
 }
 
 .item:hover {

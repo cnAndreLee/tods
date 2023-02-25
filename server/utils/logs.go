@@ -2,12 +2,15 @@ package utils
 
 import (
 	"fmt"
+
+	"github.com/cnAndreLee/tods_server/config"
 )
 
 const (
 	INFO  = "[Info]"
 	WARN  = "[Warn]"
 	ERROR = "[Error]"
+	DEBUG = "[Debug]"
 )
 
 func sendlog(logType string, s string) {
@@ -26,10 +29,8 @@ func LogERROR(s string) {
 	sendlog(ERROR, s)
 }
 
-// func Sprintf(format string, a ...interface{}) string {
-//     p := newPrinter()
-//     p.doPrintf(format, a)
-//     s := string(p.buf)
-//     p.free()
-//     return s
-// }
+func LogDebug(s string) {
+	if config.CONFIG.IsDebug == true {
+		sendlog(DEBUG, s)
+	}
+}

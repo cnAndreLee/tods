@@ -1,7 +1,14 @@
 <template>
   <el-row class="tac">
     <el-col :span="4">
-      <h5 class="mb-2">TODS管理</h5>
+      <el-row align="middle">
+        <el-col :span="18">
+          <h5 class="mb-2">TODS管理</h5>
+        </el-col>
+        <el-col :span="6">
+          <el-icon @click="routeto('/')"><HomeFilled /></el-icon>
+        </el-col>
+      </el-row>
       <el-menu
         default-active="2"
         class="el-menu-vertical-demo"

@@ -10,16 +10,6 @@ import (
 	_ "gorm.io/driver/postgres"
 )
 
-type UserInfo struct {
-	accout   string
-	password string
-}
-
-type AuthResult struct {
-	token string
-	msg   string
-}
-
 func main() {
 
 	config.InitConfig()

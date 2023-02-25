@@ -1,25 +1,5 @@
 package common
 
-// import (
-//     "database/sql"
-//     "fmt"
-
-//     _ "github.com/lib/pq"
-// )
-
-// var DB *sql.DB
-
-// func InitDB() {
-//     psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmoe=disable", "localhost", 54321, "postgres", "postgres", "users")
-//     db, err := sql.Open("postgres", psqlInfo)
-
-//     if err != nil {
-//         return
-//     }
-
-//     DB = db
-// }
-
 import (
 	"github.com/cnAndreLee/tods_server/config"
 	"github.com/cnAndreLee/tods_server/model"

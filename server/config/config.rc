@@ -1,0 +1,9 @@
+export TODS_ISDEBUG=false
+export TODS_PORT=8000
+export TODS_EXPORTHOST=
+export TODS_EXPORTPORT=
+export TODS_DB_HOST=
+export TODS_DB_PORT=
+export TODS_DB_USER
+export TODS_DB_PASSWORD
+export TODS_DB_DBNAME

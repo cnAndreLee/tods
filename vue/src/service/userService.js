@@ -25,6 +25,11 @@ const deleteUser = (payload) => {
     return request.delete('api/v1/user' + "?account=" + payload)
 }
 
+// admin change key
+const adminChangeKey = (payload) => {
+    return request.post('api/v1/user/adminchangekey', payload)
+}
+
 export default {
     register,
     login,
@@ -32,4 +37,5 @@ export default {
     getAllUsers,
     deleteUser,
     getAllSchools,
+    adminChangeKey
 }

@@ -11,7 +11,7 @@ psql
 ```sql
 create database tods;
 \c tods
-insert into users (account, key, is_admin, out_date) values ('admin', '123456', true, '2099-0101');
+insert into users (account, key, is_admin, out_date) values ('admin', '123456', true, '2099-01-01');
 ```
 
 # 2.kkfileview
@@ -22,7 +22,7 @@ docker run -d --name kkfile -p 8012:8012 keking/kkfileview
 # 3.TODS_WEB
 Enter 'vue' and exec build.sh
 ```shell
-docker run -d --name tods_web -p 80:80 tods_web:1.0
+docker run -d --name tods_web -p 80:80 tods_web
 ```
 
 
@@ -31,5 +31,5 @@ docker run -d --name tods_web -p 80:80 tods_web:1.0
 Enter 'server' and exec build.sh
 
 ```shell
-docker run -d --name tods_server -p 8000:8000 -e TODS_DB_HOST=10.0.0.10 -e TODS_DB_PORT=5432 -v /home/ubuntu/file:/root/file tods_server:1.0
+docker run -d --name tods_server -p 8000:8000 -e TODS_DB_HOST=10.0.0.10 -e TODS_DB_PORT=5432 -v /home/ubuntu/file:/root/file tods_server
 ```

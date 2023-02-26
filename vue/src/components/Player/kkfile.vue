@@ -18,7 +18,7 @@ const filkkeurl = computed(() => {
   const backend = config.backend
   const suffix = store.state.fileModule.selectedFile.suffix
   const id = store.state.fileModule.selectedFile.id
-  const fileSource = backend + '/api/files/' + id + '.' + suffix
+  const fileSource = backend + config.filespath + id + '.' + suffix
   return kkurl + encodeURIComponent(window.btoa(fileSource))
 })
 

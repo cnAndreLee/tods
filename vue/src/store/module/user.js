@@ -117,6 +117,19 @@ const userModule = {
                 })
             })
         },
+        adminChangeKey(context, payload) {
+            return new Promise((resolve, reject ) => {
+                userService.adminChangeKey(payload).then( (res) => {
+                    if ( res.data.status == 2000 ) {
+                        resolve(res)
+                    } else {
+                        reject(res)
+                    }
+                }).catch((res) => {
+                    reject(res)
+                })
+            })
+        },
     },
 }
 

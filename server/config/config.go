@@ -44,8 +44,8 @@ func InitConfig() {
 		},
 	}
 
-	if s, exists := os.LookupEnv("TODS_IsDebug"); exists {
-		if s == "true" || s == "True" {
+	if s, exists := os.LookupEnv("TODS_ISDEBUG"); exists {
+		if s == "true" || s == "True" || s == "TRUE" {
 			CONFIG.IsDebug = true
 		}
 	}

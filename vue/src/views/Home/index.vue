@@ -34,6 +34,7 @@
   import Player from "../../components/Player/index.vue"
   import FileList from "../../components/FileList/index.vue"
   import { ref,computed,onMounted,onBeforeMount } from 'vue'
+  import storageService from '../../service/storageService';
   import { useRouter } from 'vue-router'
   import { ElMessage } from 'element-plus'
 
@@ -77,15 +78,29 @@
     }
   }
 
-  const DataInit = () => {
-
+  const GetCategories = () => {
     store.dispatch('fileModule/getCategories').then((res) => {
       const categories = res.data.data.categories
       TreeData.value = categories
     }).catch((err)=>{
       console.log(err)
     })
+  }
 
+  const DataInit = () => {
+    // 获取用户信息
+    if (storageService.get(storageService.USER_TOKEN) != null) {
+      store.dispatch('userModule/info').then(() => {
+        console.log("setUserinfo success")
+      }).catch((err)=>{
+        ElMessage.error("认证失败，请登录")
+        router.push('/login')
+      })
+    } else {
+      router.push('/login')
+    }
+    GetCategories()
+    
   };
   DataInit()
 </script>

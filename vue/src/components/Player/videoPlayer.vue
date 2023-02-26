@@ -17,7 +17,7 @@ const store = useStore()
 
 const selectedFileUrl = computed(() => {
   const selectedFile = store.state.fileModule.selectedFile
-  const url = config.backend + "/api/files/" + selectedFile.id + "." + selectedFile.suffix
+  const url = config.backend + config.filespath + selectedFile.id + "." + selectedFile.suffix
   return url
 })
 

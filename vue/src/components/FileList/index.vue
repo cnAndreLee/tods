@@ -19,8 +19,6 @@
         </div>
       </el-col>
       <el-col :span="4" >
-        <!-- <a v-for="file in files" :href="'http://andrelee.f3322.net:28000/api/files/' + file.id + '.' + file.suffix" download><el-icon class="item" size="middle" ><Download /></el-icon></a> -->
-        
         <el-icon v-for="file in files" class="item" size="middle" @click="downloadfile(file)"><Download /></el-icon>
       </el-col>
   </el-row>
@@ -45,7 +43,7 @@ const select = (file) => {
 
 
 const downloadfile = (file) => {
-  const url = config.backend + "/api/files/" + file.id + '.' + file.suffix
+  const url = config.backend + config.filespath + file.id + '.' + file.suffix
   const filename = file.title
 
   const x = new XMLHttpRequest()

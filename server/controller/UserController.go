@@ -30,7 +30,7 @@ func Register(c *gin.Context) {
 	//校验用户名
 	if !service.IsAccountLegal(dtoUser.Account) {
 		res := response.ResponseStruct{
-			HttpStatus: http.StatusBadRequest,
+			HttpStatus: http.StatusOK,
 			Code:       response.FailCode,
 			Msg:        "用户名不合法，请使用小写字母和数字组合，且是字母开头",
 			Data:       nil,
@@ -70,24 +70,15 @@ func Register(c *gin.Context) {
 
 func JWTLogin(ctx *gin.Context) {
 
-	// 定义响应结构体
-	res := response.ResponseStruct{
-		HttpStatus: http.StatusOK,
-		Code:       response.SuccessCode,
-		Msg:        "",
-		Data:       nil,
-	}
-
 	var dtoUserLogin model.DtoUserLogin
 	if err := ctx.ShouldBind(&dtoUserLogin); err != nil {
-		res = response.ResponseStruct{
+		res := response.ResponseStruct{
 			HttpStatus: http.StatusOK,
 			Code:       response.FailCode,
 			Msg:        "登录失败，参数错误",
 			Data:       nil,
 		}
 		response.Response(ctx, res)
-		utils.LogINFO("登录失败，参数错误:" + err.Error())
 		return
 	}
 
@@ -100,7 +91,7 @@ func JWTLogin(ctx *gin.Context) {
 
 	if !exists {
 		utils.LogINFO("登录失败，用户不存在")
-		res = response.ResponseStruct{
+		res := response.ResponseStruct{
 			HttpStatus: 200,
 			Code:       response.FailCode,
 			Data:       nil,
@@ -113,7 +104,7 @@ func JWTLogin(ctx *gin.Context) {
 	// 验证密码
 	if dtoUserLogin.Key != doUser.Key {
 		utils.LogINFO("登录失败，密码不匹配")
-		res = response.ResponseStruct{
+		res := response.ResponseStruct{
 			HttpStatus: 200,
 			Code:       1,
 			Data:       nil,
@@ -126,7 +117,7 @@ func JWTLogin(ctx *gin.Context) {
 	// 生成token
 	tokenString, err := common.CreateToken(doUser.Account)
 	if err != nil {
-		res = response.ResponseStruct{
+		res := response.ResponseStruct{
 			HttpStatus: http.StatusInternalServerError,
 			Code:       response.ServerErrorCode,
 			Data:       nil,
@@ -137,13 +128,12 @@ func JWTLogin(ctx *gin.Context) {
 	}
 
 	//return token
-	res = response.ResponseStruct{
+	res := response.ResponseStruct{
 		HttpStatus: http.StatusOK,
 		Code:       response.SuccessCode,
 		Data:       gin.H{"token": tokenString},
 		Msg:        "ok",
 	}
-
 	response.Response(ctx, res)
 }
 
@@ -232,10 +222,10 @@ func DeleteUser(ctx *gin.Context) {
 
 // 响应所有学校
 func RespUsersSchool(ctx *gin.Context) {
-
 	var schools []string
 	common.DB.Model(&model.User{}).Distinct().Pluck("school", &schools)
 
+	utils.LogDebug(fmt.Sprintf("school: %#v", schools))
 	var filteredSchools []string
 	for _, v := range schools {
 		if v != "" {
@@ -250,6 +240,46 @@ func RespUsersSchool(ctx *gin.Context) {
 		Data: gin.H{
 			"schools": filteredSchools,
 		},
+	}
+	response.Response(ctx, res)
+}
+
+func ChangeUserKey(ctx *gin.Context) {
+
+	var dtoUserChangeKey model.DtoChangeUserKey
+
+	if err := ctx.ShouldBind(&dtoUserChangeKey); err != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Msg:        "修改失败，参数错误",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	result := common.DB.
+		Model(&model.User{}).
+		Where("account = ?", dtoUserChangeKey.Account).
+		Update("key", dtoUserChangeKey.NewKey)
+
+	if err := result.Error; err != nil {
+		res := response.ResponseStruct{
+			HttpStatus: http.StatusOK,
+			Code:       response.FailCode,
+			Msg:        "修改失败, 服务器出错，请向管理员报告",
+			Data:       nil,
+		}
+		response.Response(ctx, res)
+		return
+	}
+
+	res := response.ResponseStruct{
+		HttpStatus: http.StatusOK,
+		Code:       response.SuccessCode,
+		Msg:        "",
+		Data:       nil,
 	}
 	response.Response(ctx, res)
 }

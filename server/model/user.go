@@ -22,3 +22,8 @@ type DtoUserLogin struct {
 	Account string `json:"account" binding:"required"`
 	Key     string `json:"key" binding:"required"`
 }
+
+type DtoChangeUserKey struct {
+	Account string `json:"account" binding:"required"`
+	NewKey  string `json:"new_key" binding:"required"`
+}

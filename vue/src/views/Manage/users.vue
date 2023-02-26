@@ -21,12 +21,13 @@
             
             <el-table-column fixed="right" label="操作" style="width:18%">
                 <template #default="scope">
+                    <el-button type="success" plain @click="handleChangeKey(scope.row)">修改密码</el-button>
                     <el-popconfirm title='确认删除？？？'
                         confirm-button-text='Yes'
                         cancel-button-text='No'
                         icon='el-icon-delete'
                         icon-color='red'
-                        @confirm='handelDelete(scope.$index)'
+                        @confirm='handelDelete(scope.$index,scope.row)'
                         >
                             <template #reference><el-button type="danger" plain>删除</el-button></template>
                     </el-popconfirm>
@@ -78,6 +79,21 @@
             </span>
         </template>
     </el-dialog>
+
+    <!-- admin改密码对话框 -->
+    <el-dialog
+        v-model="changeKeyDialogVisible"
+        title="请输入新的密码"
+        width="30%"
+        >
+        <el-input v-model="newKey"></el-input>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="changeKeyDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="changeKey">确认</el-button>
+            </span>
+        </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -101,7 +117,11 @@ const getUserList = () => {
 }
 
 // 用户删除相关 -----------------------------------------------------------
-const handelDelete = (index) => {
+const handelDelete = (index,row) => {
+    if (row.account == "admin") {
+        ElMessage.error("admin不可删除")
+        return
+    }
     console.log("delete user: "+tableData.value[index].account)
     let account = tableData.value[index].account
 
@@ -137,6 +157,30 @@ const handleAddUser = () => {
     })
 }
 
+// admin change key ----------------------------------------------------
+const changeKeyDialogVisible = ref(false)
+const selectedUserAccount = ref("")
+const newKey = ref("")
+const handleChangeKey = (row) => {
+    changeKeyDialogVisible.value = true
+    selectedUserAccount.value = row.account
+    newKey.value = row.key
+}
+
+const changeKey = () => {
+    const keyForm = {
+        account:selectedUserAccount.value,
+        new_key:newKey.value
+    }
+    store.dispatch('userModule/adminChangeKey', keyForm).then((res) => {
+        changeKeyDialogVisible.value = false
+        getUserList()
+        ElMessage.success("修改成功")
+        
+    }).catch((res)=>{
+        ElMessage.error(res.data.msg)
+    })
+}
 
 const DataInit = () => {
     getUserList()

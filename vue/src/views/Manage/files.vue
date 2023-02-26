@@ -70,7 +70,6 @@
                 :headers="headers"
                 :before-upload="beforeUpload"
                 :on-success="handleSuccess"
-                multiple
                 >
                 <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
                 <div class="el-upload__text">
@@ -148,18 +147,12 @@ const tableData = ref([])
 
 
 // 上传前 
-const supportFileType = ["video/mp4", 
-    "application/msword", 
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
-    "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation", 
-    "application/vnd.ms-excel", 
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
+const supportFileType = config.supportFileType
 const beforeUpload : UploadProps['beforeUpload'] = (rawFile) => {
   console.log(rawFile.type)
   if (supportFileType.indexOf(rawFile.type) === -1) {
     // ElMessage.error('不支持的文件类型')
-    ElMessage('不支持的文件类型')
+    ElMessage.error('不支持的文件类型')
     return false
   } 
   return true
@@ -179,7 +172,6 @@ const props = {
 
 // 获取文件列表
 const getFilesList = (id) => {
-    console.log("id:"+id)
     store.dispatch('fileModule/getFiles',{"id":id}).then((res)=>{
         tableData.value = res.data.data.files
         isSelectedCollection.value = true

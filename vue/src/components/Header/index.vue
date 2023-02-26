@@ -34,21 +34,6 @@ const router = useRouter()
 
 const store = useStore()
 
-// 生命周期钩子：组件挂载后执行
-const init = () => {
-  if (storageService.get(storageService.USER_TOKEN) != null) {
-      store.dispatch('userModule/info').then(() => {
-        console.log("setUserinfo success")
-      }).catch((err)=>{
-        console.log("setUserinfo failed err : " + err)
-        router.push('/login')
-      })
-  } else {
-      router.push('/login')
-  }
-};
-init();
-
 const userInfo = computed( ()  => {
     // return JSON.parse(storageService.get(storageService.USER_INFO))
     return store.state.userModule.userInfo

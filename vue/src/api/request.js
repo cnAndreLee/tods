@@ -3,7 +3,6 @@ import storageService from '../service/storageService'
 import config from "../config.js"
 
 const requests = axios.create({
-    // baseURL: "http://10.0.0.10:8000/",
     baseURL: config.backend,
     timeout: 2000,
 })
@@ -19,6 +18,7 @@ requests.interceptors.request.use( (config) => {
     return Promise.reject(error);
 });
 
+// 响应拦截器
 // requests.interceptor.response.use( (res) => {
 //   
 //     return res.data;

@@ -18,5 +18,7 @@ func GetUserRoutes(route *gin.RouterGroup) {
 	user.Handle("GET", "/users", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.RespUsers)
 	user.Handle("DELETE", "", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.DeleteUser)
 	user.Handle("GET", "/school", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.RespUsersSchool)
+	// 管理员修改用户密码
+	user.Handle("POST", "/adminchangekey", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.ChangeUserKey)
 
 }

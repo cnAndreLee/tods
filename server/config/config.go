@@ -94,5 +94,5 @@ func InitConfig() {
 		BannedAccountsMap[v] = ""
 	}
 
-	fmt.Sprintf("config loaded --- %v \n", CONFIG)
+	fmt.Printf("Config loaded --- %+v \n", CONFIG)
 }

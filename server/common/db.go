@@ -1,6 +1,8 @@
 package common
 
 import (
+	"time"
+
 	"github.com/cnAndreLee/tods_server/config"
 	"github.com/cnAndreLee/tods_server/model"
 	"github.com/cnAndreLee/tods_server/utils"
@@ -21,11 +23,19 @@ func InitDB() *gorm.DB {
 
 	dsn := "host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + strconv.Itoa(port) + " sslmode=disable"
 	utils.LogINFO("dsn is --- " + dsn)
-	//dsn := "host=localhost user=postgres password=postgres dbname=tods port=54321 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if err != nil {
-		panic("failed to connect database, err: " + err.Error())
+	var db *gorm.DB
+	var err error
+	for {
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		if err != nil {
+			utils.LogERROR("Failed to connect database, err: " + err.Error())
+			time.Sleep(time.Duration(5) * time.Second)
+		} else {
+			utils.LogINFO("Success to connect database!")
+			break
+		}
+
 	}
 
 	db.AutoMigrate(&model.User{})

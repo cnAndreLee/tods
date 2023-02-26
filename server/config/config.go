@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -85,20 +86,6 @@ func InitConfig() {
 		CONFIG.DB.DbName = s
 	}
 
-	// content, _ := ioutil.ReadFile("config/config.yaml")
-
-	// err := yaml.Unmarshal(content, &CONFIG)
-
-	// if err != nil {
-	// 	panic("failed to load config, err: " + err.Error())
-	// }
-
-	// if s := os.Getenv("IsDebug"); s == "true" {
-	// 	CONFIG.IsDebug = true
-	// } else {
-	// 	CONFIG.IsDebug = false
-	// }
-
 	//载入禁用用户名
 	// 非法用户名数组
 	BannedAccounts := []string{"root", "admin", "administrator", "account"}
@@ -107,5 +94,5 @@ func InitConfig() {
 		BannedAccountsMap[v] = ""
 	}
 
-	// utils.LogINFO(fmt.Sprintf("config loaded --- %v \n", CONFIG))
+	fmt.Sprintf("config loaded --- %v \n", CONFIG)
 }

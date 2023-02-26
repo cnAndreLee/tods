@@ -1,6 +1,12 @@
 #!/bin/bash
+cd `dirname $0`
+
+sudo docker stop tods_server
+sudo docker rm tods_server
+sudo docker rmi tods_server
 rm tods_server
+
+set -e
 go build
-docker rm tods_server
-docker rmi tods_server:1.0
-docker build -t tods_server:1.0 .
+sudo docker build -t tods_server .
+rm tods_server

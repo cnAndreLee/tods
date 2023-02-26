@@ -1,6 +1,6 @@
 const config = {
-    backend: "http://10.0.0.10:8000",
-    kkfile: "http://10.0.0.10:8012/onlinePreview?url=",
+    backend: import.meta.env.VITE_TODS_SERVER,
+    kkfile: import.meta.env.VITE_KK_SERVER,
 
     filespath: "/api/files/",
     supportFileType :[
@@ -15,6 +15,8 @@ const config = {
     ]
 }
 
-
+console.log(import.meta.env.MODE)
+console.log(import.meta.env.VITE_TODS_SERVER)
+console.log(import.meta.env.VITE_KK_SERVER)
 
 export default config

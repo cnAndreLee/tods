@@ -43,7 +43,7 @@ let data = reactive({
 let signinResult = ref(0)
 
 function signin() {
-    console.log('signin in')
+
     // 数据校验
     if ( data.userInfo.Account.trim() === '' || data.userInfo.Key.trim() === '' ) {
         signinResult.value = '账号或密码不能为空'
@@ -52,6 +52,9 @@ function signin() {
 
     store.dispatch('userModule/login', data.userInfo).then(() => {
         signinResult.value = "登录成功, 正在跳转..."
+            store.dispatch('userModule/info').then(() => {
+
+        })
         // route to home
         setTimeout(() => {router.push('/')}, 500)
     }).catch((err) => {

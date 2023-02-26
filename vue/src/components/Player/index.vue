@@ -16,7 +16,7 @@ import onlyoffice from "./onlyoffice.vue"
 const store = useStore()
 
 // office的后缀名列表
-const officeFileType = ['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls']
+const officeFileType = ['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls', 'pdf']
 
 const selectedFileSuffix = computed(() => {
     return store.state.fileModule.selectedFile.suffix

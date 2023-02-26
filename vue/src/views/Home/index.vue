@@ -91,7 +91,7 @@
     // 获取用户信息
     if (storageService.get(storageService.USER_TOKEN) != null) {
       store.dispatch('userModule/info').then(() => {
-        console.log("setUserinfo success")
+        GetCategories()
       }).catch((err)=>{
         ElMessage.error("认证失败，请登录")
         router.push('/login')
@@ -99,7 +99,7 @@
     } else {
       router.push('/login')
     }
-    GetCategories()
+    
     
   };
   DataInit()

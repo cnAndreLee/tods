@@ -52,15 +52,15 @@ function signin() {
 
     store.dispatch('userModule/login', data.userInfo).then(() => {
         signinResult.value = "登录成功, 正在跳转..."
-            store.dispatch('userModule/info').then(() => {
-
-        })
         // route to home
         setTimeout(() => {router.push('/')}, 500)
     }).catch((err) => {
-        // console.log("signin failed")
-        console.log(err)
-        signinResult.value = "登录失败：" + err.data.msg
+        console.log(err.data.status)
+        if (err.data.status >= 4000) {
+            signinResult.value = "登录失败：" + err.data.msg
+        } else {
+            signinResult.value = "服务器错误，请联系管理员"
+        }
         data.userInfo.Key = ""
     });
 };

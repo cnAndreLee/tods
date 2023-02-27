@@ -12,11 +12,8 @@ const config = {
         "application/vnd.ms-excel", 
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "application/pdf",
-    ]
+    ],
+    officeFileType :['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls', 'pdf']
 }
-
-console.log(import.meta.env.MODE)
-console.log(import.meta.env.VITE_TODS_SERVER)
-console.log(import.meta.env.VITE_KK_SERVER)
 
 export default config

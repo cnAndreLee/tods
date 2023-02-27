@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router"
+import PreHome from "../views/Home/prehome.vue"
 import Home from "../views/Home/index.vue"
 import Login from "../views/Login/index.vue"
 import Manage from "../views/Manage/index.vue"
@@ -9,6 +10,10 @@ import Categories1 from "../views/Manage/categories1.vue"
 const routes = [
     {
       path: '/',
+      component: PreHome
+    },
+    {
+      path: '/home',
       name: 'home',
       component: Home
     },

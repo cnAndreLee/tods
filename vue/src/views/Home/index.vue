@@ -83,23 +83,16 @@
       const categories = res.data.data.categories
       TreeData.value = categories
     }).catch((err)=>{
-      console.log(err)
+      console.log(err.response.data.status)
+      if (err.response.data.status >= 4000) {
+        setTimeout(() => {router.push('/login')}, 200)
+      }
     })
   }
 
   const DataInit = () => {
-    // 获取用户信息
-    if (storageService.get(storageService.USER_TOKEN) != null) {
-      store.dispatch('userModule/info').then(() => {
-        GetCategories()
-      }).catch((err)=>{
-        ElMessage.error("认证失败，请登录")
-        router.push('/login')
-      })
-    } else {
-      router.push('/login')
-    }
-    
+
+    GetCategories()
     
   };
   DataInit()

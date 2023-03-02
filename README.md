@@ -11,29 +11,6 @@ sudo mkdir -p /var/lib/tods/file
 ```
 
 ```shell
-# sql
-sudo docker run -d \
-	--restart=always \
-	--name postgres \
-	-e POSTGRES_PASSWORD=postgres \
-	-p 5432:5432 \
-	-v /var/lib/tods/data:/var/lib/postgresql/data \
-	postgres:12
-
-# Create database tods
-sudo docker exec -it  postgres /bin/bash
-su - postgres
-psql
-```
-
-```sql
-create database tods;
-\c tods
-insert into users (account, key, is_admin, out_date) values ('admin', '123456', true, '2099-01-01');
-
-```
-
-```shell
 # server
 sudo docker run -d \
 	--restart=always \
@@ -61,5 +38,27 @@ sudo docker run -d \
 	-p 8012:8012 \
 	keking/kkfileview
 
+```
+
+```shell
+# sql
+sudo docker run -d \
+	--restart=always \
+	--name postgres \
+	-e POSTGRES_PASSWORD=postgres \
+	-p 5432:5432 \
+	-v /var/lib/tods/data:/var/lib/postgresql/data \
+	postgres:12
+
+# Create database tods
+sudo docker exec -it  postgres /bin/bash
+su - postgres
+psql
+```
+
+```sql
+create database tods;
+\c tods
+insert into users (account, key, is_admin, out_date) values ('admin', '123456', true, '2099-01-01');
 ```
 

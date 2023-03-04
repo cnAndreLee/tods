@@ -2,7 +2,7 @@
     <vue3VideoPlay
         id="player"
         v-bind="options"
-        poster="https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/ironMan.jpg" >
+        poster="https://mdacc.org/wp-content/uploads/iStock-1213521308.1900x670px.jpg" >
     </vue3VideoPlay>
 </template>
 

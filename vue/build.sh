@@ -1,7 +1,7 @@
 #!/bin/bash
 cd `dirname $0`
 
-image=andreleesss/tods_server
+image=andreleesss/tods_web
 tag=latest
 echo $image:$tag
 

@@ -1,6 +1,7 @@
 const config = {
-    backend: import.meta.env.VITE_TODS_SERVER,
-    kkfile: import.meta.env.VITE_KK_SERVER,
+    // 生产环境下交给nginx做反向代理，对外只暴露一个origin
+    backend: import.meta.env.MODE == "development" ? import.meta.env.VITE_TODS_SERVER : window.location.origin,
+    kkfile : import.meta.env.MODE == "development" ? import.meta.env.VITE_KK_SERVER : window.location.origin,
 
     filespath: "/api/files/",
     supportFileType :[
@@ -15,5 +16,6 @@ const config = {
     ],
     officeFileType :['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls', 'pdf']
 }
+
 
 export default config

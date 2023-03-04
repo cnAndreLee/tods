@@ -2,9 +2,9 @@
   "name": "vue-project",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --host 10.0.0.10 --port 1234",
+    "dev": "vite --host 0.0.0.0 --port 81",
     "build": "vite build",
-    "preview": "vite preview --host 10.0.0.10 --port 4173"
+    "preview": "vite preview --host 0.0.0.0 --port 81"
   },
   "dependencies": {
     "@onlyoffice/document-editor-vue": "^1.1.0",

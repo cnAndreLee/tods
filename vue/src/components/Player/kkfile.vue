@@ -14,7 +14,7 @@ const store = useStore()
 
 
 const filkkeurl = computed(() => {
-  const kkurl = config.kkfile
+  const kkurl = config.kkfile + "/onlinePreview?url="
   const backend = config.backend
   const suffix = store.state.fileModule.selectedFile.suffix
   const id = store.state.fileModule.selectedFile.id

@@ -11,7 +11,7 @@ sudo mkdir -p /var/lib/tods/file
 ```
 #### create nginx.conf
 ```shell
-touch /var/lib/tods/nginx.conf
+sudo touch /var/lib/tods/nginx.conf
 ```
 
 #### nginx.conf : you can instead of ip
@@ -74,6 +74,7 @@ sudo docker run -d \
 	--restart=always \
 	--name tods_web \
 	-p 81:80 \
+	-e VITE_KK_SERVER=http://10.0.0.10:8012 \
 	andreleesss/tods_web
 
 # kkfile
@@ -81,6 +82,8 @@ sudo docker run -d \
 	--restart=always \
 	--name kkfile \
 	-p 8012:8012 \
+	-e KK_CONTEXT_PATH="/preview" \
+	-e KK_BASE_URL="http://10.0.0.10:8012/preview"
 	keking/kkfileview
 
 ```

@@ -40,13 +40,9 @@ http {
 			proxy_pass http://10.0.0.10:8000;
 		}
 
-		location ^~ /onlinePreview {
+		location ^~ /preview {
 			proxy_pass http://10.0.0.10:8012;
-		}
-		location ^~ /pptx {
-			proxy_pass http://10.0.0.10:8012;
-		}
-		
+		}	
 		
 	}
 
@@ -57,6 +53,7 @@ http {
 #### docker
 ```shell
 # server
+sudo docker pull andreleesss/tods_server
 sudo docker run -d \
 	--restart=always \
 	--name tods_server \
@@ -70,11 +67,11 @@ sudo docker run -d \
 	andreleesss/tods_server
 
 # web
+sudo docker pull andreleesss/tods_web
 sudo docker run -d \
 	--restart=always \
 	--name tods_web \
 	-p 81:80 \
-	-e VITE_KK_SERVER=http://10.0.0.10:8012 \
 	andreleesss/tods_web
 
 # kkfile
@@ -83,7 +80,7 @@ sudo docker run -d \
 	--name kkfile \
 	-p 8012:8012 \
 	-e KK_CONTEXT_PATH="/preview" \
-	-e KK_BASE_URL="http://10.0.0.10:8012/preview"
+	-e KK_BASE_URL="http://andrelee.f3322.net:8989/preview" \
 	keking/kkfileview
 
 ```

@@ -35,6 +35,9 @@ http {
 		location / {
 			proxy_pass http://10.0.0.10:81;
 		}
+		location /home {
+			proxy_pass http://10.0.0.10:81/;
+		}
 		
 		location ^~ /api/ {
 			proxy_pass http://10.0.0.10:8000;

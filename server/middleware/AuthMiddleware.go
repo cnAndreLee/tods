@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/cnAndreLee/tods_server/common"
 	"github.com/cnAndreLee/tods_server/model"
@@ -79,5 +80,44 @@ func ClientIPDeal() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		utils.LogINFO("IP: " + ctx.ClientIP())
 		ctx.Next()
+	}
+}
+
+func AuthVip() gin.HandlerFunc {
+
+	return func(ctx *gin.Context) {
+
+		user, _ := ctx.Get("user")
+
+		var doUser model.User
+		common.DB.Where("account = ?", user.(string)).First(&doUser)
+		outdate, err := time.Parse("2006-01-02", doUser.OutDate)
+
+		if err != nil {
+			res := response.ResponseStruct{
+				HttpStatus: http.StatusOK,
+				Code:       response.VipExiredCode,
+				Data:       nil,
+				Msg:        "vip认证失败",
+			}
+			response.Response(ctx, res)
+			ctx.Abort()
+			return
+		}
+
+		if outdate.Before(time.Now()) {
+			res := response.ResponseStruct{
+				HttpStatus: http.StatusOK,
+				Code:       response.VipExiredCode,
+				Data:       nil,
+				Msg:        "VIP 已过期",
+			}
+			response.Response(ctx, res)
+			ctx.Abort()
+			return
+		}
+
+		ctx.Next()
+
 	}
 }

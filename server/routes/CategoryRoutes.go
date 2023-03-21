@@ -14,7 +14,7 @@ func GetCategoryRoutes(route *gin.RouterGroup) {
 	r.Handle("POST", "/", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.CreateCategory)
 	r.Handle("DELETE", "/", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.DeleteCategory)
 	r.Handle("PUT", "/", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.ModifyCategory)
-	r.Handle("GET", "/", middleware.AuthMiddleware(), controller.GetCategory)
+	r.Handle("GET", "/", middleware.AuthMiddleware(), middleware.AuthVip(), controller.GetCategory)
 
 	// 更改一级category的权限
 	r.Handle("PUT", "/permission", middleware.AuthMiddleware(), middleware.AdminAuth(), controller.ChangeCategoryPermission)

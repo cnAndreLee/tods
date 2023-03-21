@@ -83,9 +83,9 @@
       const categories = res.data.data.categories
       TreeData.value = categories
     }).catch((err)=>{
-      console.log(err.response.data.status)
+      console.log("--"+err)
       if (err.response.data.status >= 4000) {
-        setTimeout(() => {router.push('/login')}, 200)
+        ElMessage.error("错误："+err.data.msg)
       }
     })
   }

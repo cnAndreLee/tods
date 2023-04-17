@@ -5,6 +5,7 @@ const config = {
 
     filespath: "/api/files/",
     supportFileType :[
+        "audio/mpeg", //mp3
         "video/mp4", 
         "application/msword", 
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
@@ -14,7 +15,7 @@ const config = {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "application/pdf",
     ],
-    officeFileType :['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls', 'pdf']
+    officeFileType :['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls', 'pdf', 'mp3']
 }
 
 

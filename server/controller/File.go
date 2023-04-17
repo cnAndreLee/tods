@@ -54,7 +54,7 @@ func UploadFile(ctx *gin.Context) {
 	// 检查是否存在相同文件名
 	if common.DB.Where("title = ?", fileTitle).First(&model.File{}).Error == nil {
 		res := response.ResponseStruct{
-			HttpStatus: 200,
+			HttpStatus: 400,
 			Code:       response.FailCode,
 			Msg:        "文件名重复",
 			Data:       nil,

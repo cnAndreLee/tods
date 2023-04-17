@@ -66,10 +66,12 @@
             <el-upload
                 class="upload-demo"
                 drag
+                multiple
                 :action="fileUploadUrl"
                 :headers="headers"
                 :before-upload="beforeUpload"
                 :on-success="handleSuccess"
+                :on-error="handleError"
                 >
                 <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
                 <div class="el-upload__text">
@@ -213,6 +215,11 @@ DataInit()
 const handleSuccess = () => {
   ElMessage.success("上传成功")
   getFilesList(value.value[1])
+}
+
+// 上传失败
+const handleError = () => {
+    ElMessage.error("上传失败，文件名重复")
 }
 
 // 删除按钮

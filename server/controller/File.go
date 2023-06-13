@@ -52,7 +52,7 @@ func UploadFile(ctx *gin.Context) {
 	filename := fileID + "." + suffix
 
 	// 检查是否存在相同文件名
-	if common.DB.Where("title = ?", fileTitle).First(&model.File{}).Error == nil {
+	if common.DB.Where("title = ? AND file_belong = ?", fileTitle, fileBelong).First(&model.File{}).Error == nil {
 		res := response.ResponseStruct{
 			HttpStatus: 400,
 			Code:       response.FailCode,
@@ -157,7 +157,7 @@ func GetFile(ctx *gin.Context) {
 	}
 
 	var doFiles []model.File
-	common.DB.Where("file_belong = ?", parentID).Find(&doFiles)
+	common.DB.Where("file_belong = ?", parentID).Order("title").Find(&doFiles)
 
 	res := response.ResponseStruct{
 		HttpStatus: http.StatusOK,

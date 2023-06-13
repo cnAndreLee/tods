@@ -269,7 +269,7 @@ func ChangeCategoryPermission(c *gin.Context) {
 func GetCategory(c *gin.Context) {
 
 	var Categories []model.Category
-	common.DB.Find(&Categories)
+	common.DB.Order("title").Find(&Categories)
 
 	var voGetCategories []model.GetCategoryVO
 	for _, v := range Categories {

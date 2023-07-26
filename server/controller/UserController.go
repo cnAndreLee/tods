@@ -106,7 +106,7 @@ func JWTLogin(ctx *gin.Context) {
 		utils.LogINFO("登录失败，密码不匹配")
 		res := response.ResponseStruct{
 			HttpStatus: 200,
-			Code:       1,
+			Code:       response.FailCode,
 			Data:       nil,
 			Msg:        "登录失败，用户名或密码错误",
 		}

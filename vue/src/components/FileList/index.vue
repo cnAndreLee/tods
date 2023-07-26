@@ -45,7 +45,7 @@ const select = (file) => {
 
 const downloadfile = (file) => {
   const fileurl = config.backend + config.filespath + file.id + '.' + file.suffix
-  const filename = file.title
+  const filename = file.title + "." + file.suffix
 
   var link = document.createElement('a');
   link.href = fileurl;
